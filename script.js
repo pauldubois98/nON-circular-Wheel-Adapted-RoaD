@@ -5,6 +5,8 @@ var wheel_ctx = wheel_canvas.getContext('2d');
 // wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop + wheel_canvas.height/2;
 var wheelLeft = wheel_canvas.offsetLeft + wheel_canvas.clientLeft;
 var wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
+var wheelCenter_x = wheel_canvas.width/2;
+var wheelCenter_y = wheel_canvas.height/2;
 
 var path_canvas = document.getElementById("path_canvas");
 var path_ctx = path_canvas.getContext('2d');
@@ -19,72 +21,41 @@ var editing_point_index;
 var editing_start_x;
 var editing_start_y;
 
-var LightenColor = function(color, percent) {
-    var num = parseInt(color,16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) + amt,
-    B = (num >> 8 & 0x00FF) + amt,
-    G = (num & 0x0000FF) + amt;
-    return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
-};
+var path_cartesian = [[138,73], [265,77], [269,237], [147,186]];
+var path_polar = [];
 
-function centeredCircle(canvas, ctx, radius, colorFill, colorStroke){
-    ctx.beginPath();
-    ctx.arc(canvas.width/2, canvas.height/2, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = colorFill;
-    ctx.fill();
-    ctx.strokeStyle = colorStroke;
-    ctx.stroke();
+function cartesian(angle, radius, c_x=wheelCenter_x, c_y=wheelCenter_y){
+    return [c_x+Math.cos(angle)*radius, c_y-Math.sin(angle)*radius];
 }
-function drawPath(canvas, ctx, points, colorFill, colorStroke, closePath=true){
-    for(i=0; i<points.length; i++){
-        var point = points[i];
-        ctx.beginPath();
-        ctx.arc(point[0],point[1], 3, 0, 2 * Math.PI);
-        ctx.fillStyle = "#005";
-        ctx.fill(); 
+function polar(x,y, c_x=wheelCenter_x, c_y=wheelCenter_y){
+    p_x = x-c_x;
+    p_y = -(y-c_y);
+    return [Math.atan2(p_y,p_x),Math.sqrt(p_x**2 + p_y**2)];
+}
+function calculate_polars(){
+    path_polar = [];
+    for(i=0; i<path_cartesian.length; i++){
+        path_polar = path_polar.concat( [polar(path_cartesian[i][0], path_cartesian[i][1])] );
     }
-    //start
-    ctx.beginPath();
-    ctx.moveTo(points[0][0],points[0][1]);
-    //iterate
-    for(i=1; i<points.length; i++){
-        var point = points[i];
-        ctx.lineTo(point[0],point[1]);
+    path_polar = path_polar.sort(function (a,b){return a[0]-b[0]})
+}
+function calculate_cartesian(){
+    path_cartesian = [];
+    for(i=0; i<path_polar.length; i++){
+        path_cartesian = path_cartesian.concat( [cartesian(path_polar[i][0], path_polar[i][1])] );
     }
-    if(closePath){
-        //close path
-        ctx.lineTo(points[0][0],points[0][1]);
-    }
-    //fill & stroke
-    ctx.fillStyle = colorFill;
-    ctx.fill();
-    ctx.strokeStyle = colorStroke;
-    ctx.stroke();
 }
 
-function redrawWheel(finish=true){
-    wheel_ctx.clearRect(0, 0, wheel_canvas.width, wheel_canvas.height);
-    centeredCircle(wheel_canvas, wheel_ctx, 
-        Math.min(wheel_canvas.width, wheel_canvas.height)*1/2.2,
-        "#BFB8", "#4D48");
-    drawPath(wheel_canvas, wheel_ctx, path_points, "#88F", "#229", finish)
-    centeredCircle(wheel_canvas, wheel_ctx, 
-        Math.min(wheel_canvas.width, wheel_canvas.height)*1/8,
-        "#4D48", "#0908");
-    centeredCircle(wheel_canvas, wheel_ctx, 1, "#000", "#000");
-}
-
-
-
-var path_points = [[138,73], [265,77], [269,237], [147,186]]
-redrawWheel()
 
 
 wheel_canvas.addEventListener('click', function(event) {
     // console.log('[' + (event.pageX-wheelLeft) + ',' + (event.pageY-wheelTop) +']');
+    // console.log('[' + (event.pageX-wheelLeft-wheelCenter_x) + ',' + -(event.pageY-wheelTop-wheelCenter_y) +']');
+    // console.log('[' + polar(event.pageX-wheelLeft,event.pageY-wheelTop) +']');
     if(WHEEL_DRAWING){
-        path_points = path_points.concat( [[event.pageX-wheelLeft, event.pageY-wheelTop]] );
+        path_cartesian = path_cartesian.concat( [[event.pageX-wheelLeft, event.pageY-wheelTop]] );
+        calculate_polars();
+        calculate_cartesian();
         redrawWheel(false);
     };
     
@@ -94,8 +65,8 @@ wheel_canvas.addEventListener('mousedown', function(event) {
     var y = event.pageY-wheelTop;
     if(WHEEL_EDITING){
         editing_point_index = -1
-        for(i=0; i<path_points.length; i++){
-            var pt = path_points[i];
+        for(i=0; i<path_cartesian.length; i++){
+            var pt = path_cartesian[i];
             var dist = Math.sqrt( (x-pt[0])**2 + (y-pt[1])**2 )
             if(dist<5){
                 editing_point_index = i;
@@ -111,8 +82,9 @@ wheel_canvas.addEventListener('mousedown', function(event) {
 });
 wheel_canvas.addEventListener('mousemove', function(event) {
     if(WHEEL_EDITING_ON){
-        path_points[editing_point_index][0] += event.pageX-wheelLeft-editing_start_x;
-        path_points[editing_point_index][1] += event.pageY-wheelTop-editing_start_y;
+        path_cartesian[editing_point_index][0] += event.pageX-wheelLeft-editing_start_x;
+        path_cartesian[editing_point_index][1] += event.pageY-wheelTop-editing_start_y;
+        calculate_polars();
         editing_start_x = event.pageX-wheelLeft;
         editing_start_y = event.pageY-wheelTop;
         redrawWheel();
@@ -122,29 +94,26 @@ wheel_canvas.addEventListener('mousemove', function(event) {
 wheel_canvas.addEventListener('mouseup', function(event) {
     if(WHEEL_EDITING_ON){
         WHEEL_EDITING_ON = false;
+        calculate_cartesian();
         redrawWheel();
     };
     
 });
 
 new_wheel_btn.addEventListener('click', function(event){
-    // console.log('new path');
-    path_points = []
+    path_cartesian = [];
+    path_polar = [];
     WHEEL_DRAWING=true;
     WHEEL_EDITING=false;
 });
 
 finish_wheel_btn.addEventListener('click', function(event){
-    // console.log('finish path');
-    // console.log(path_points);
     WHEEL_DRAWING=false;
     WHEEL_EDITING=false;
     redrawWheel();
 });
 
 edit_wheel_btn.addEventListener('click', function(event){
-    // console.log('finish path');
-    // console.log(path_points);
     WHEEL_DRAWING=false;
     if (WHEEL_EDITING){
         WHEEL_EDITING=false;
@@ -153,3 +122,38 @@ edit_wheel_btn.addEventListener('click', function(event){
     };
     redrawWheel();
 });
+
+
+
+
+function radius(alpha){
+    j=0;
+    while(alpha>path_polar[j % path_polar.length][0] && j<path_polar.length){
+        j++;
+    }
+    j = j % path_polar.length;
+    angleB = path_polar[j][0];
+    rB = path_polar[j][1];
+    j = (path_polar.length + j-1)% (path_polar.length);
+    angleA = path_polar[j][0];
+    rA = path_polar[j][1];
+
+    angleAB = ((angleB-angleA)+(2*Math.PI))%(2*Math.PI) 
+    dist_AB = Math.sqrt( (rA**2) + (rB**2) - (2*rA*rB*Math.cos(angleAB)) );
+
+    sin_angle_rA = rA*Math.sin(angleAB)/dist_AB;
+    sin_angle_rB = rB*Math.sin(angleAB)/dist_AB;
+    angle_rA = Math.asin(sin_angle_rA);
+    angle_rB = Math.asin(sin_angle_rB);
+
+    r_alpha = (rA*sin_angle_rB)/(Math.sin( (Math.PI-angle_rB-( (alpha-angleA+(2*Math.PI))%(2*Math.PI) ) ) ));
+    r_alpha_bis = (rB*sin_angle_rA)/(Math.sin( (Math.PI-angle_rA-( (angleB-alpha+(2*Math.PI))%(2*Math.PI) ) ) ));
+    return Math.max(r_alpha,r_alpha_bis)
+}
+
+
+
+
+
+calculate_polars();
+redrawWheel()
