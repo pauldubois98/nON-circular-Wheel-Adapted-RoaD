@@ -17,16 +17,26 @@ var landTop = land_canvas.offsetTop + land_canvas.clientTop;
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
 var edit_wheel_btn = document.getElementById("edit_wheel_btn");
-var WHEEL_DRAWING=false;
-var WHEEL_EDITING=false;
-var WHEEL_EDITING_ON=false;
+var WHEEL_DRAWING = false;
+var WHEEL_EDITING = false;
+var WHEEL_EDITING_ON = false;
 var editing_point_index;
 var editing_start_x;
 var editing_start_y;
 
+var radius_max = 0;
+
 var wheel_cartesian = [[138,73], [265,77], [269,237], [147,186]];
 var wheel_polar = [];
 var land = [];
+
+var land_wheel_x = land_canvas.width/2;
+var land_wheel_y = 0;
+var land_wheel_angle = 0;
+var land_wheel_cartesian = [[0,0]];
+var land_wheel_polar = [[0,0]];
+var LAND_MOUSE_DOWN = false;
+
 
 
 function cartesian(angle, radius, c_x=wheelCenter_x, c_y=wheelCenter_y){
@@ -54,8 +64,31 @@ function calculate_cartesian(){
 
 
 land_canvas.addEventListener('click', function(event) {
-    console.log('[' + (event.pageX-landLeft) + ',' + (event.pageY-landTop) +']');
+    // console.log('[' + (event.pageX-landLeft) + ',' + (event.pageY-landTop) +']');
+    land_wheel_x = event.pageX-landLeft;
+    calculate_land_wheel();
+    redrawLand();
 });
+land_canvas.addEventListener('mousedown', function(event) {
+    LAND_MOUSE_DOWN = true;
+    land_wheel_x = event.pageX-landLeft;
+    calculate_land_wheel();
+    redrawLand();
+});
+land_canvas.addEventListener('mousemove', function(event) {
+    if(LAND_MOUSE_DOWN){
+        land_wheel_x = event.pageX-landLeft;
+        calculate_land_wheel();
+        redrawLand();
+    }
+});
+land_canvas.addEventListener('mouseup', function(event) {
+    LAND_MOUSE_DOWN = false;
+    land_wheel_x = event.pageX-landLeft;
+    calculate_land_wheel();
+    redrawLand();
+});
+
 wheel_canvas.addEventListener('click', function(event) {
     // console.log('[' + (event.pageX-wheelLeft) + ',' + (event.pageY-wheelTop) +']');
     // console.log('[' + (event.pageX-wheelLeft-wheelCenter_x) + ',' + -(event.pageY-wheelTop-wheelCenter_y) +']');
@@ -105,6 +138,7 @@ wheel_canvas.addEventListener('mouseup', function(event) {
         calculate_cartesian();
         redrawWheel();
         calculate_land();
+        calculate_land_wheel();
         redrawLand();
     };
     
@@ -134,6 +168,7 @@ edit_wheel_btn.addEventListener('click', function(event){
     };
     redrawWheel();
     calculate_land();
+    calculate_land_wheel();
     redrawLand();
 });
 
@@ -196,21 +231,21 @@ function angle(alpha){
 }
 
 function calculate_land(NB_PTS=100){
-    var radius_max = 0
+    radius_max = 0;
     for(i=0; i<wheel_polar.length; i++){
         if(wheel_polar[i][1]>radius_max){
             radius_max = wheel_polar[i][1]
         }
     }
-    
     land = [[0,land_canvas.height,0]];
-    var i=0;
+    var i = 0;
     var x = 0;
     var y_prev = radius(-Math.PI);
     var y = y_prev;
-    var dr=0
-    while(x<land_canvas.width){
-        land = land.concat([[x,y+(land_canvas.height-radius_max)]]);
+    var dr = 0;
+    var alpha = -Math.PI;
+    while(x<=land_canvas.width){
+        land = land.concat([[x,y+(land_canvas.height-radius_max),alpha]]);
         i++;
         alpha = ((2*Math.PI*i/NB_PTS)%(2*Math.PI))-Math.PI;
         y_prev = y;
@@ -219,7 +254,30 @@ function calculate_land(NB_PTS=100){
         dx = dr*Math.cos(angle(alpha))
         x = x+dx;
     }
+    land = land.concat([[x,y+(land_canvas.height-radius_max),alpha]]);
     land = land.concat([[land_canvas.width,land_canvas.height,0]]);
+}
+
+function calculate_land_wheel(){
+    var i=1;
+    while(land[i][0]<land_wheel_x && i<land.length-3){
+        i++;
+    }
+    land_wheel_y = land_canvas.height-radius_max
+    // land_wheel_angle = land[i][2]
+    if(Math.abs(land[i+1][2]-land[i][2])>Math.PI){
+        land_wheel_angle = land[i][2]
+    } else{
+        land_wheel_angle = land[i][2]+((land_wheel_x-land[i][0])*(land[i+1][2]-land[i][2])/(land[i+1][0]-land[i][0]));
+    }
+    land_wheel_polar = [];
+    land_wheel_cartesian = [];
+    for(var j=0; j<wheel_polar.length; j++){
+        var a = wheel_polar[j][0]-land_wheel_angle-Math.PI/2;
+        var r = wheel_polar[j][1];
+        land_wheel_polar = land_wheel_polar.concat([[ a,r ]]);
+        land_wheel_cartesian = land_wheel_cartesian.concat([ cartesian(a, r, c_x=land_wheel_x, c_y=land_wheel_y) ])
+    }
 }
 
 
@@ -228,4 +286,5 @@ function calculate_land(NB_PTS=100){
 calculate_polars();
 redrawWheel();
 calculate_land();
+calculate_land_wheel();
 redrawLand();
