@@ -15,13 +15,15 @@ function centeredCircle(canvas, ctx, radius, colorFill, colorStroke){
     ctx.strokeStyle = colorStroke;
     ctx.stroke();
 }
-function drawPath(canvas, ctx, points, colorFill, colorStroke, closePath=true){
-    for(i=0; i<points.length; i++){
-        var point = points[i];
-        ctx.beginPath();
-        ctx.arc(point[0],point[1], 3, 0, 2 * Math.PI);
-        ctx.fillStyle = "#005";
-        ctx.fill(); 
+function drawPath(canvas, ctx, points, colorFill, colorStroke, closePath=true, dottedPath=true){
+    if(dottedPath){
+        for(i=0; i<points.length; i++){
+            var point = points[i];
+            ctx.beginPath();
+            ctx.arc(point[0],point[1], 3, 0, 2 * Math.PI);
+            ctx.fillStyle = "#005";
+            ctx.fill(); 
+        }
     }
     //start
     ctx.beginPath();
@@ -47,15 +49,15 @@ function redrawWheel(finish=true){
     centeredCircle(wheel_canvas, wheel_ctx, 
         Math.min(wheel_canvas.width, wheel_canvas.height)*1/2.2,
         "#BFB8", "#4D48");
-    drawPath(wheel_canvas, wheel_ctx, path_cartesian, "#88F", "#229", finish)
+    drawPath(wheel_canvas, wheel_ctx, wheel_cartesian, "#88F", "#229", finish)
     //// for debugging the radius functions:
-    // path_cartesian2 = []
+    // wheel_cartesian2 = []
     // n=100
     // for(var i=0; i<n; i++){
     //     a = -Math.PI + (2*Math.PI*i/n)
-    //     path_cartesian2 = path_cartesian2.concat( [cartesian(a,radius(a))] );
+    //     wheel_cartesian2 = wheel_cartesian2.concat( [cartesian(a,radius(a))] );
     // }
-    // drawPath(wheel_canvas, wheel_ctx, path_cartesian2, "#F88", "#922", finish)
+    // drawPath(wheel_canvas, wheel_ctx, wheel_cartesian2, "#F88", "#922", finish)
     centeredCircle(wheel_canvas, wheel_ctx,
         Math.min(wheel_canvas.width, wheel_canvas.height)*1/8,
         "#4D48", "#0908");
@@ -63,3 +65,7 @@ function redrawWheel(finish=true){
 }
 
 
+function redrawLand(){
+    land_ctx.clearRect(0, 0, land_canvas.width, land_canvas.height);
+    drawPath(land_canvas, land_ctx, land, "#999", "#222", true, false)
+}
