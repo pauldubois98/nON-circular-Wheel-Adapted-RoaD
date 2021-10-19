@@ -8,11 +8,11 @@ var wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
 var wheelCenter_x = wheel_canvas.width/2;
 var wheelCenter_y = wheel_canvas.height/2;
 
-var land_canvas = document.getElementById("land_canvas");
-var land_ctx = land_canvas.getContext('2d');
+var road_canvas = document.getElementById("road_canvas");
+var road_ctx = road_canvas.getContext('2d');
 
-var landLeft = land_canvas.offsetLeft + land_canvas.clientLeft;
-var landTop = land_canvas.offsetTop + land_canvas.clientTop;
+var roadLeft = road_canvas.offsetLeft + road_canvas.clientLeft;
+var roadTop = road_canvas.offsetTop + road_canvas.clientTop;
 
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
@@ -28,42 +28,42 @@ var radius_max = 0;
 
 var wheel_cartesian = [[138,73], [265,77], [269,237], [147,186]];
 var wheel_polar = [];
-var land = [];
+var road = [];
 
-var land_wheel_x = land_canvas.width/2;
-var land_wheel_y = 0;
-var land_wheel_angle = 0;
-var land_wheel_cartesian = [[0,0]];
-var land_wheel_polar = [[0,0]];
-var LAND_MOUSE_DOWN = false;
-
-
+var road_wheel_x = road_canvas.width/2;
+var road_wheel_y = 0;
+var road_wheel_angle = 0;
+var road_wheel_cartesian = [[0,0]];
+var road_wheel_polar = [[0,0]];
+var ROAD_MOUSE_DOWN = false;
 
 
-land_canvas.addEventListener('click', function(event) {
-    // console.log('[' + (event.pageX-landLeft) + ',' + (event.pageY-landTop) +']');
-    land_wheel_x = event.pageX-landLeft;
-    calculate_land_wheel();
-    redrawLand();
+
+
+road_canvas.addEventListener('click', function(event) {
+    // console.log('[' + (event.pageX-roadLeft) + ',' + (event.pageY-roadTop) +']');
+    road_wheel_x = event.pageX-roadLeft;
+    calculate_road_wheel();
+    redrawRoad();
 });
-land_canvas.addEventListener('mousedown', function(event) {
-    LAND_MOUSE_DOWN = true;
-    land_wheel_x = event.pageX-landLeft;
-    calculate_land_wheel();
-    redrawLand();
+road_canvas.addEventListener('mousedown', function(event) {
+    ROAD_MOUSE_DOWN = true;
+    road_wheel_x = event.pageX-roadLeft;
+    calculate_road_wheel();
+    redrawRoad();
 });
-land_canvas.addEventListener('mousemove', function(event) {
-    if(LAND_MOUSE_DOWN){
-        land_wheel_x = event.pageX-landLeft;
-        calculate_land_wheel();
-        redrawLand();
+road_canvas.addEventListener('mousemove', function(event) {
+    if(ROAD_MOUSE_DOWN){
+        road_wheel_x = event.pageX-roadLeft;
+        calculate_road_wheel();
+        redrawRoad();
     }
 });
-land_canvas.addEventListener('mouseup', function(event) {
-    LAND_MOUSE_DOWN = false;
-    land_wheel_x = event.pageX-landLeft;
-    calculate_land_wheel();
-    redrawLand();
+road_canvas.addEventListener('mouseup', function(event) {
+    ROAD_MOUSE_DOWN = false;
+    road_wheel_x = event.pageX-roadLeft;
+    calculate_road_wheel();
+    redrawRoad();
 });
 
 wheel_canvas.addEventListener('click', function(event) {
@@ -111,9 +111,9 @@ wheel_canvas.addEventListener('mousedown', function(event) {
                 calculate_cartesian();
             }
             redrawWheel();
-            calculate_land();
-            calculate_land_wheel();
-            redrawLand();
+            calculate_road();
+            calculate_road_wheel();
+            redrawRoad();
         }
     };
     
@@ -137,9 +137,9 @@ wheel_canvas.addEventListener('mouseup', function(event) {
         WHEEL_EDITING_ON = false;
         calculate_cartesian();
         redrawWheel();
-        calculate_land();
-        calculate_land_wheel();
-        redrawLand();
+        calculate_road();
+        calculate_road_wheel();
+        redrawRoad();
     };
     
 });
@@ -159,9 +159,9 @@ finish_wheel_btn.addEventListener('click', function(event){
     WHEEL_DRAWING=false;
     WHEEL_EDITING=false;
     redrawWheel();
-    calculate_land();
-    calculate_land_wheel();
-    redrawLand();
+    calculate_road();
+    calculate_road_wheel();
+    redrawRoad();
 });
 
 edit_wheel_btn.addEventListener('click', function(event){
@@ -174,9 +174,9 @@ edit_wheel_btn.addEventListener('click', function(event){
         edit_wheel_btn.textContent = "Edit Wheel ON";
     };
     redrawWheel();
-    calculate_land();
-    calculate_land_wheel();
-    redrawLand();
+    calculate_road();
+    calculate_road_wheel();
+    redrawRoad();
 });
 
 
@@ -185,6 +185,6 @@ edit_wheel_btn.addEventListener('click', function(event){
 
 calculate_polars();
 redrawWheel();
-calculate_land();
-calculate_land_wheel();
-redrawLand();
+calculate_road();
+calculate_road_wheel();
+redrawRoad();

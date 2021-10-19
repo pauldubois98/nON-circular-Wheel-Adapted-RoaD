@@ -51,8 +51,8 @@ function redrawWheel(finish=true){
     wheel_ctx.clearRect(0, 0, wheel_canvas.width, wheel_canvas.height);
     centeredCircle(wheel_canvas, wheel_ctx, 
         Math.min(wheel_canvas.width, wheel_canvas.height)*1/2.2,
-        "#BFB8", "#4D48");
-    drawPath(wheel_canvas, wheel_ctx, wheel_cartesian, "#88F", "#229", finish);
+        "#a4e8ff77", "#a4e8ff00");
+    drawPath(wheel_canvas, wheel_ctx, wheel_cartesian, "#61D8FF", "#309488", finish);
     //// for debugging the radius functions:
     // wheel_cartesian2 = []
     // n=100
@@ -63,18 +63,18 @@ function redrawWheel(finish=true){
     // drawPath(wheel_canvas, wheel_ctx, wheel_cartesian2, "#F88", "#922", finish)
     centeredCircle(wheel_canvas, wheel_ctx,
         Math.min(wheel_canvas.width, wheel_canvas.height)*1/8,
-        "#4D48", "#0908");
+        "#a4e8ff55", "#a4e8ff00");
     centeredCircle(wheel_canvas, wheel_ctx, 1, "#000", "#000");
 }
 
 
-function redrawLand(){
-    land_ctx.clearRect(0, 0, land_canvas.width, land_canvas.height);
-    drawPath(land_canvas, land_ctx, land, "#999", "#222", true, false);
-    drawPath(land_canvas, land_ctx, land_wheel_cartesian, "#88F", "#229", true, false);
+function redrawRoad(){
+    road_ctx.clearRect(0, 0, road_canvas.width, road_canvas.height);
+    drawPath(road_canvas, road_ctx, road, "#96FFAA", "#438855", true, false);
+    drawPath(road_canvas, road_ctx, road_wheel_cartesian, "#61D8FF", "#309488", true, false);
 
-    land_ctx.beginPath();
-    land_ctx.arc(land_wheel_x, land_wheel_y, 2, 0, 2 * Math.PI);
-    land_ctx.fillStyle = "#000";
-    land_ctx.fill();
+    road_ctx.beginPath();
+    road_ctx.arc(road_wheel_x, road_wheel_y, 2, 0, 2 * Math.PI);
+    road_ctx.fillStyle = "#000";
+    road_ctx.fill();
 }

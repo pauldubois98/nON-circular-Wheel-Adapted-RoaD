@@ -79,22 +79,22 @@ function angle(alpha){
 
 
 
-function calculate_land(NB_PTS=250){
+function calculate_road(NB_PTS=250){
     radius_max = 0;
     for(i=0; i<wheel_polar.length; i++){
         if(wheel_polar[i][1]>radius_max){
             radius_max = wheel_polar[i][1]
         }
     }
-    land = [[0,land_canvas.height,0]];
+    road = [[0,road_canvas.height,0]];
     var i = 0;
     var x = 0;
     var y_prev = radius(-Math.PI);
     var y = y_prev;
     var dr = 0;
     var alpha = -Math.PI;
-    while(x<=land_canvas.width){
-        land = land.concat([[x,y+(land_canvas.height-radius_max),alpha]]);
+    while(x<=road_canvas.width){
+        road = road.concat([[x,y+(road_canvas.height-radius_max),alpha]]);
         i++;
         alpha = ((2*Math.PI*i/NB_PTS)%(2*Math.PI))-Math.PI;
         y_prev = y;
@@ -103,28 +103,27 @@ function calculate_land(NB_PTS=250){
         dx = dr*Math.cos(angle(alpha))
         x = x+dx;
     }
-    land = land.concat([[x,y+(land_canvas.height-radius_max),alpha]]);
-    land = land.concat([[land_canvas.width,land_canvas.height,0]]);
+    road = road.concat([[x,y+(road_canvas.height-radius_max),alpha]]);
+    road = road.concat([[road_canvas.width,road_canvas.height,0]]);
 }
-function calculate_land_wheel(){
+function calculate_road_wheel(){
     var i=1;
-    while(land[i][0]<land_wheel_x && i<land.length-3){
+    while(road[i][0]<road_wheel_x && i<road.length-3){
         i++;
     }
-    land_wheel_y = land_canvas.height-radius_max
-    // land_wheel_angle = land[i][2]
-    if(Math.abs(land[i+1][2]-land[i][2])>Math.PI){
-        land_wheel_angle = land[i][2]
+    road_wheel_y = road_canvas.height-radius_max
+    if(Math.abs(road[i+1][2]-road[i][2])>Math.PI){
+        road_wheel_angle = road[i][2]+((road_wheel_x-road[i][0])*(road[i+1][2]-road[i][2]+2*Math.PI)/(road[i+1][0]-road[i][0]));
     } else{
-        land_wheel_angle = land[i][2]+((land_wheel_x-land[i][0])*(land[i+1][2]-land[i][2])/(land[i+1][0]-land[i][0]));
+        road_wheel_angle = road[i][2]+((road_wheel_x-road[i][0])*(road[i+1][2]-road[i][2])/(road[i+1][0]-road[i][0]));
     }
-    land_wheel_polar = [];
-    land_wheel_cartesian = [];
+    road_wheel_polar = [];
+    road_wheel_cartesian = [];
     for(var j=0; j<wheel_polar.length; j++){
-        var a = wheel_polar[j][0]-land_wheel_angle-Math.PI/2;
+        var a = wheel_polar[j][0]-road_wheel_angle-Math.PI/2;
         var r = wheel_polar[j][1];
-        land_wheel_polar = land_wheel_polar.concat([[ a,r ]]);
-        land_wheel_cartesian = land_wheel_cartesian.concat([ cartesian(a, r, c_x=land_wheel_x, c_y=land_wheel_y) ])
+        road_wheel_polar = road_wheel_polar.concat([[ a,r ]]);
+        road_wheel_cartesian = road_wheel_cartesian.concat([ cartesian(a, r, c_x=road_wheel_x, c_y=road_wheel_y) ])
     }
 }
 

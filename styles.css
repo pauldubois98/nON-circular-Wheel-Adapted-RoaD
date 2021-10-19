@@ -4,7 +4,11 @@ body,main{
     align-items: center;
 }
 h1{
-    color: red;
+    color: violet;
+    text-align: center;
+}
+h2{
+    color: rgb(255, 202, 104);
     text-align: center;
 }
 canvas{
