@@ -102,15 +102,15 @@ function calculate_road_pattern(NB_PTS=250){
         dr = Math.sqrt(y_prev**2 + y**2 - 2*y*y_prev*Math.cos(2*Math.PI/NB_PTS));
         dx = dr*Math.cos(angle(alpha))
         x = x+dx;
-        road_pattern = road_pattern.concat([[dx,y+(road_canvas.height-radius_max),alpha]]);
+        road_pattern = road_pattern.concat([[dx,y+(demo_canvas.height-radius_max),alpha]]);
     }
     road_pattern_length = x;
 }
-function calculate_road(NB_PTS=250){
+function calculate_demo_road(NB_PTS=250){
     var i = 0;
     var x = 0;
-    road = [[0,road_canvas_bis.height,0]];
-    while(x<=road_canvas_bis.width){
+    road = [[0,demo_canvas_bis.height,0]];
+    while(x<=demo_canvas_bis.width){
         road = road.concat([[x,road_pattern[i][1],road_pattern[i][2]]]);
         x += road_pattern[i][0];
         i++;
@@ -119,40 +119,40 @@ function calculate_road(NB_PTS=250){
         }
     }
     road = road.concat([[x,road_pattern[i][1],road_pattern[i][2]]]);
-    road = road.concat([[road_canvas.width,road_canvas.height,0]]);
+    road = road.concat([[demo_canvas.width,demo_canvas.height,0]]);
 }
-function calculate_road_wheel(){
+function calculate_demo_wheel(){
     var i=1;
-    while(road[i][0]<road_wheel_x && i<road.length-3){
+    while(road[i][0]<demo_wheel_x && i<road.length-3){
         i++;
     }
-    road_wheel_y = road_canvas.height-radius_max
+    demo_wheel_y = demo_canvas.height-radius_max
     if(Math.abs(road[i+1][2]-road[i][2])>Math.PI){
-        road_wheel_angle = road[i][2]+((road_wheel_x-road[i][0])*(road[i+1][2]-road[i][2]+2*Math.PI)/(road[i+1][0]-road[i][0]));
+        demo_wheel_angle = road[i][2]+((demo_wheel_x-road[i][0])*(road[i+1][2]-road[i][2]+2*Math.PI)/(road[i+1][0]-road[i][0]));
     } else{
-        road_wheel_angle = road[i][2]+((road_wheel_x-road[i][0])*(road[i+1][2]-road[i][2])/(road[i+1][0]-road[i][0]));
+        demo_wheel_angle = road[i][2]+((demo_wheel_x-road[i][0])*(road[i+1][2]-road[i][2])/(road[i+1][0]-road[i][0]));
     }
-    //road_wheel_angle = road[i][2];
-    road_wheel_polar = [];
-    road_wheel_cartesian = [];
+    //demo_wheel_angle = road[i][2];
+    demo_wheel_polar = [];
+    demo_wheel_cartesian = [];
     for(var j=0; j<wheel_polar.length; j++){
-        var a = wheel_polar[j][0]-road_wheel_angle-Math.PI/2;
+        var a = wheel_polar[j][0]-demo_wheel_angle-Math.PI/2;
         var r = wheel_polar[j][1];
-        road_wheel_polar = road_wheel_polar.concat([[ a,r ]]);
-        road_wheel_cartesian = road_wheel_cartesian.concat([ cartesian(a, r, c_x=road_wheel_x, c_y=road_wheel_y) ]);
+        demo_wheel_polar = demo_wheel_polar.concat([[ a,r ]]);
+        demo_wheel_cartesian = demo_wheel_cartesian.concat([ cartesian(a, r, c_x=demo_wheel_x, c_y=demo_wheel_y) ]);
     }
 }
-function calculate_road_bis(NB_PTS=250){
+function calculate_demo_bis(NB_PTS=250){
     // finding start
-    while(road_bis_x<0){
-        road_bis_x += road_pattern_length;
+    while(demo_bis_x<0){
+        demo_bis_x += road_pattern_length;
     }
-    while(road_bis_x>road_pattern_length){
-        road_bis_x -= road_pattern_length;
+    while(demo_bis_x>road_pattern_length){
+        demo_bis_x -= road_pattern_length;
     }
     x = 0;
     i = 0;
-    while(x<road_bis_x){
+    while(x<demo_bis_x){
         x += road_pattern[i][0];
         i++;
     }
@@ -160,10 +160,10 @@ function calculate_road_bis(NB_PTS=250){
         i--;
     }
     x -= road_pattern[i][0];
-    x -= road_bis_x;
+    x -= demo_bis_x;
     // road
-    road_bis = [[0,road_canvas_bis.height,0]];
-    while(x<=road_canvas_bis.width){
+    road_bis = [[0,demo_canvas_bis.height,0]];
+    while(x<=demo_canvas_bis.width){
         road_bis = road_bis.concat([[x,road_pattern[i][1],road_pattern[i][2]]]);
         x += road_pattern[i][0];
         i++;
@@ -172,23 +172,23 @@ function calculate_road_bis(NB_PTS=250){
         }
     }
     road_bis = road_bis.concat([[x,road_pattern[i][1],road_pattern[i][2]]]);
-    road_bis = road_bis.concat([[road_canvas_bis.width,road_canvas_bis.height,0]]);
+    road_bis = road_bis.concat([[demo_canvas_bis.width,demo_canvas_bis.height,0]]);
     // wheel
     var i=1;
-    while(road_bis[i][0]<road_wheel_bis_x && i<road_bis.length-3){
+    while(road_bis[i][0]<demo_wheel_bis_x && i<road_bis.length-3){
         i++;
     }
-    road_wheel_bis_y = road_canvas_bis.height-radius_max;
+    demo_wheel_bis_y = demo_canvas_bis.height-radius_max;
     if(Math.abs(road_bis[i+1][2]-road_bis[i][2])>Math.PI){
-        road_wheel_bis_angle = road_bis[i][2]+((road_wheel_bis_x-road_bis[i][0])*(road_bis[i+1][2]-road_bis[i][2]+2*Math.PI)/(road_bis[i+1][0]-road_bis[i][0]));
+        demo_wheel_bis_angle = road_bis[i][2]+((demo_wheel_bis_x-road_bis[i][0])*(road_bis[i+1][2]-road_bis[i][2]+2*Math.PI)/(road_bis[i+1][0]-road_bis[i][0]));
     } else{
-        road_wheel_bis_angle = road_bis[i][2]+((road_wheel_bis_x-road_bis[i][0])*(road_bis[i+1][2]-road_bis[i][2])/(road_bis[i+1][0]-road_bis[i][0]));
+        demo_wheel_bis_angle = road_bis[i][2]+((demo_wheel_bis_x-road_bis[i][0])*(road_bis[i+1][2]-road_bis[i][2])/(road_bis[i+1][0]-road_bis[i][0]));
     }
-    //road_wheel_bis_angle = road_bis[i][2];
-    road_wheel_bis_cartesian = [];
+    //demo_wheel_bis_angle = road_bis[i][2];
+    demo_wheel_bis_cartesian = [];
     for(var j=0; j<wheel_polar.length; j++){
-        var a = wheel_polar[j][0]-road_wheel_bis_angle-Math.PI/2;
+        var a = wheel_polar[j][0]-demo_wheel_bis_angle-Math.PI/2;
         var r = wheel_polar[j][1];
-        road_wheel_bis_cartesian = road_wheel_bis_cartesian.concat([ cartesian(a, r, c_x=road_wheel_bis_x, c_y=road_wheel_bis_y) ]);
+        demo_wheel_bis_cartesian = demo_wheel_bis_cartesian.concat([ cartesian(a, r, c_x=demo_wheel_bis_x, c_y=demo_wheel_bis_y) ]);
     }
 }

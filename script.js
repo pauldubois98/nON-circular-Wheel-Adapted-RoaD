@@ -8,15 +8,15 @@ var wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
 var wheelCenter_x = wheel_canvas.width/2;
 var wheelCenter_y = wheel_canvas.height/2;
 
-var road_canvas = document.getElementById("road_canvas");
-var road_ctx = road_canvas.getContext('2d');
-var roadLeft = road_canvas.offsetLeft + road_canvas.clientLeft;
-var roadTop = road_canvas.offsetTop + road_canvas.clientTop;
+var demo_canvas = document.getElementById("demo_canvas");
+var demo_ctx = demo_canvas.getContext('2d');
+var demoLeft = demo_canvas.offsetLeft + demo_canvas.clientLeft;
+var demoTop = demo_canvas.offsetTop + demo_canvas.clientTop;
 
-var road_canvas_bis = document.getElementById("road_canvas_bis");
-var road_ctx_bis = road_canvas_bis.getContext('2d');
-var roadLeft_bis = road_canvas_bis.offsetLeft + road_canvas_bis.clientLeft;
-var roadTop_bis = road_canvas_bis.offsetTop + road_canvas_bis.clientTop;
+var demo_canvas_bis = document.getElementById("demo_canvas_bis");
+var demo_ctx_bis = demo_canvas_bis.getContext('2d');
+var demoLeft_bis = demo_canvas_bis.offsetLeft + demo_canvas_bis.clientLeft;
+var demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
 
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
@@ -37,63 +37,63 @@ var road_pattern = [];
 var road_pattern_length = 0;
 
 var road = [];
-var road_wheel_x = road_canvas.width/2;
-var road_wheel_y = 0;
-var road_wheel_angle = 0;
-var road_wheel_cartesian = [[0,0]];
-var road_wheel_polar = [[0,0]];
-var ROAD_MOUSE_DOWN = false;
+var demo_wheel_x = demo_canvas.width/2;
+var demo_wheel_y = 0;
+var demo_wheel_angle = 0;
+var demo_wheel_cartesian = [[0,0]];
+var demo_wheel_polar = [[0,0]];
+var DEMO_MOUSE_DOWN = false;
 
-var road_bis_x = 0;
+var demo_bis_x = 0;
 var road_bis = 0;
-var road_wheel_bis_cartesian = 0;
-var road_wheel_bis_x = road_canvas.width/2;
-var road_wheel_bis_y = 0;
-var road_wheel_bis_angle = 0;
-var ROAD_MOUSE_DOWN_BIS = false;
-var ROAD_MOUSE_DOWN_BIS_X = 0;
+var demo_wheel_bis_cartesian = 0;
+var demo_wheel_bis_x = demo_canvas.width/2;
+var demo_wheel_bis_y = 0;
+var demo_wheel_bis_angle = 0;
+var DEMO_MOUSE_DOWN_BIS = false;
+var DEMO_MOUSE_DOWN_BIS_X = 0;
 
 
 
-road_canvas.addEventListener('mousedown', function(event) {
-    ROAD_MOUSE_DOWN = true;
-    road_wheel_x = event.pageX-roadLeft;
-    calculate_road_wheel();
-    redrawRoad();
+demo_canvas.addEventListener('mousedown', function(event) {
+    DEMO_MOUSE_DOWN = true;
+    demo_wheel_x = event.pageX-demoLeft;
+    calculate_demo_wheel();
+    redrawDemo();
 });
-road_canvas.addEventListener('mousemove', function(event) {
-    if(ROAD_MOUSE_DOWN){
-        road_wheel_x = event.pageX-roadLeft;
-        calculate_road_wheel();
-        redrawRoad();
+demo_canvas.addEventListener('mousemove', function(event) {
+    if(DEMO_MOUSE_DOWN){
+        demo_wheel_x = event.pageX-demoLeft;
+        calculate_demo_wheel();
+        redrawDemo();
     }
 });
-road_canvas.addEventListener('mouseup', function(event) {
-    ROAD_MOUSE_DOWN = false;
-    road_wheel_x = event.pageX-roadLeft;
-    calculate_road_wheel();
-    redrawRoad();
+demo_canvas.addEventListener('mouseup', function(event) {
+    DEMO_MOUSE_DOWN = false;
+    demo_wheel_x = event.pageX-demoLeft;
+    calculate_demo_wheel();
+    redrawDemo();
 });
 
-road_canvas_bis.addEventListener('mousedown', function(event) {
-    ROAD_MOUSE_DOWN_BIS = true;
-    ROAD_MOUSE_DOWN_BIS_X = event.pageX-roadLeft;
-    calculate_road_bis();
-    redrawRoadBis();
+demo_canvas_bis.addEventListener('mousedown', function(event) {
+    DEMO_MOUSE_DOWN_BIS = true;
+    DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft;
+    calculate_demo_bis();
+    redrawDemoBis();
 });
-road_canvas_bis.addEventListener('mousemove', function(event) {
-    if(ROAD_MOUSE_DOWN_BIS){
-        road_bis_x -= (event.pageX-roadLeft)-ROAD_MOUSE_DOWN_BIS_X;
-        ROAD_MOUSE_DOWN_BIS_X = event.pageX-roadLeft;
-        calculate_road_bis();
-        redrawRoadBis();
+demo_canvas_bis.addEventListener('mousemove', function(event) {
+    if(DEMO_MOUSE_DOWN_BIS){
+        demo_bis_x -= (event.pageX-demoLeft)-DEMO_MOUSE_DOWN_BIS_X;
+        DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft;
+        calculate_demo_bis();
+        redrawDemoBis();
     }
 });
-road_canvas_bis.addEventListener('mouseup', function(event) {
-    ROAD_MOUSE_DOWN_BIS = false;
-    road_bis_x -= (event.pageX-roadLeft)-ROAD_MOUSE_DOWN_BIS_X;
-    calculate_road_bis();
-    redrawRoadBis();
+demo_canvas_bis.addEventListener('mouseup', function(event) {
+    DEMO_MOUSE_DOWN_BIS = false;
+    demo_bis_x -= (event.pageX-demoLeft)-DEMO_MOUSE_DOWN_BIS_X;
+    calculate_demo_bis();
+    redrawDemoBis();
 });
 
 
@@ -109,11 +109,11 @@ wheel_canvas.addEventListener('click', function(event) {
         redrawWheel(false);
         if(wheel_cartesian.length>2){
             calculate_road_pattern();
-            calculate_road();
-            calculate_road_wheel();
-            redrawRoad();
-            calculate_road_bis();
-            redrawRoadBis();
+            calculate_demo_road();
+            calculate_demo_wheel();
+            redrawDemo();
+            calculate_demo_bis();
+            redrawDemoBis();
         }
     };
     
@@ -152,11 +152,11 @@ wheel_canvas.addEventListener('mousedown', function(event) {
             }
             redrawWheel();
             calculate_road_pattern();
-            calculate_road();
-            calculate_road_wheel();
-            calculate_road_bis();
-            redrawRoad();
-            redrawRoadBis();
+            calculate_demo_road();
+            calculate_demo_wheel();
+            calculate_demo_bis();
+            redrawDemo();
+            redrawDemoBis();
         }
     };
     
@@ -181,11 +181,11 @@ wheel_canvas.addEventListener('mouseup', function(event) {
         calculate_cartesian();
         redrawWheel();
         calculate_road_pattern();
-        calculate_road();
-        calculate_road_wheel();
-        calculate_road_bis();
-        redrawRoad();
-        redrawRoadBis();
+        calculate_demo_road();
+        calculate_demo_wheel();
+        calculate_demo_bis();
+        redrawDemo();
+        redrawDemoBis();
     };
     
 });
@@ -207,11 +207,11 @@ finish_wheel_btn.addEventListener('click', function(event){
     WHEEL_EDITING=false;
     redrawWheel();
     calculate_road_pattern();
-    calculate_road();
-    calculate_road_wheel();
-    calculate_road_bis();
-    redrawRoad();
-    redrawRoadBis();
+    calculate_demo_road();
+    calculate_demo_wheel();
+    calculate_demo_bis();
+    redrawDemo();
+    redrawDemoBis();
 });
 
 edit_wheel_btn.addEventListener('click', function(event){
@@ -225,11 +225,11 @@ edit_wheel_btn.addEventListener('click', function(event){
     };
     redrawWheel();
     calculate_road_pattern();
-    calculate_road();
-    calculate_road_wheel();
-    calculate_road_bis();
-    redrawRoad();
-    redrawRoadBis();
+    calculate_demo_road();
+    calculate_demo_wheel();
+    calculate_demo_bis();
+    redrawDemo();
+    redrawDemoBis();
 });
 
 
@@ -239,8 +239,8 @@ edit_wheel_btn.addEventListener('click', function(event){
 calculate_polars();
 redrawWheel();
 calculate_road_pattern();
-calculate_road();
-calculate_road_wheel();
-redrawRoad();
-calculate_road_bis();
-redrawRoadBis();
+calculate_demo_road();
+calculate_demo_wheel();
+redrawDemo();
+calculate_demo_bis();
+redrawDemoBis();
