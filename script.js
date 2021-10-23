@@ -10,9 +10,13 @@ var wheelCenter_y = wheel_canvas.height/2;
 
 var road_canvas = document.getElementById("road_canvas");
 var road_ctx = road_canvas.getContext('2d');
-
 var roadLeft = road_canvas.offsetLeft + road_canvas.clientLeft;
 var roadTop = road_canvas.offsetTop + road_canvas.clientTop;
+
+var road_canvas_bis = document.getElementById("road_canvas_bis");
+var road_ctx_bis = road_canvas_bis.getContext('2d');
+var roadLeft_bis = road_canvas_bis.offsetLeft + road_canvas_bis.clientLeft;
+var roadTop_bis = road_canvas_bis.offsetTop + road_canvas_bis.clientTop;
 
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
@@ -28,8 +32,11 @@ var radius_max = 0;
 
 var wheel_cartesian = [[138,73], [265,77], [269,237], [147,186]];
 var wheel_polar = [];
-var road = [];
 
+var road_pattern = [];
+var road_pattern_length = 0;
+
+var road = [];
 var road_wheel_x = road_canvas.width/2;
 var road_wheel_y = 0;
 var road_wheel_angle = 0;
@@ -37,15 +44,17 @@ var road_wheel_cartesian = [[0,0]];
 var road_wheel_polar = [[0,0]];
 var ROAD_MOUSE_DOWN = false;
 
+var road_bis_x = 0;
+var road_bis = 0;
+var road_wheel_bis_cartesian = 0;
+var road_wheel_bis_x = road_canvas.width/2;
+var road_wheel_bis_y = 0;
+var road_wheel_bis_angle = 0;
+var ROAD_MOUSE_DOWN_BIS = false;
+var ROAD_MOUSE_DOWN_BIS_X = 0;
 
 
 
-road_canvas.addEventListener('click', function(event) {
-    // console.log('[' + (event.pageX-roadLeft) + ',' + (event.pageY-roadTop) +']');
-    road_wheel_x = event.pageX-roadLeft;
-    calculate_road_wheel();
-    redrawRoad();
-});
 road_canvas.addEventListener('mousedown', function(event) {
     ROAD_MOUSE_DOWN = true;
     road_wheel_x = event.pageX-roadLeft;
@@ -66,6 +75,29 @@ road_canvas.addEventListener('mouseup', function(event) {
     redrawRoad();
 });
 
+road_canvas_bis.addEventListener('mousedown', function(event) {
+    ROAD_MOUSE_DOWN_BIS = true;
+    ROAD_MOUSE_DOWN_BIS_X = event.pageX-roadLeft;
+    calculate_road_bis();
+    redrawRoadBis();
+});
+road_canvas_bis.addEventListener('mousemove', function(event) {
+    if(ROAD_MOUSE_DOWN_BIS){
+        road_bis_x -= (event.pageX-roadLeft)-ROAD_MOUSE_DOWN_BIS_X;
+        ROAD_MOUSE_DOWN_BIS_X = event.pageX-roadLeft;
+        calculate_road_bis();
+        redrawRoadBis();
+    }
+});
+road_canvas_bis.addEventListener('mouseup', function(event) {
+    ROAD_MOUSE_DOWN_BIS = false;
+    road_bis_x -= (event.pageX-roadLeft)-ROAD_MOUSE_DOWN_BIS_X;
+    calculate_road_bis();
+    redrawRoadBis();
+});
+
+
+
 wheel_canvas.addEventListener('click', function(event) {
     // console.log('[' + (event.pageX-wheelLeft) + ',' + (event.pageY-wheelTop) +']');
     // console.log('[' + (event.pageX-wheelLeft-wheelCenter_x) + ',' + -(event.pageY-wheelTop-wheelCenter_y) +']');
@@ -75,6 +107,14 @@ wheel_canvas.addEventListener('click', function(event) {
         calculate_polars();
         calculate_cartesian();
         redrawWheel(false);
+        if(wheel_cartesian.length>2){
+            calculate_road_pattern();
+            calculate_road();
+            calculate_road_wheel();
+            redrawRoad();
+            calculate_road_bis();
+            redrawRoadBis();
+        }
     };
     
 });
@@ -85,7 +125,7 @@ wheel_canvas.addEventListener('mousedown', function(event) {
         editing_point_index = -1
         for(i=0; i<wheel_cartesian.length; i++){
             var pt = wheel_cartesian[i];
-            var dist = Math.sqrt( (x-pt[0])**2 + (y-pt[1])**2 )
+            var dist = Math.sqrt( (x-pt[0])**2 + (y-pt[1])**2 );
             if(dist<10 && editing_point_index==-1){
                 editing_point_index = -2;
             }
@@ -95,8 +135,8 @@ wheel_canvas.addEventListener('mousedown', function(event) {
         }
         if(event.button == 0 && editing_point_index>=0){
             WHEEL_EDITING_ON = true;
-            editing_start_x = x
-            editing_start_y = y
+            editing_start_x = x;
+            editing_start_y = y;
             drawCircle(wheel_ctx,
                 wheel_cartesian[editing_point_index][0],
                 wheel_cartesian[editing_point_index][1], 5, "#FFF0", "#F00");
@@ -106,14 +146,17 @@ wheel_canvas.addEventListener('mousedown', function(event) {
                 wheel_cartesian = wheel_cartesian.slice(0,editing_point_index).concat(wheel_cartesian.slice(editing_point_index+1));
                 calculate_polars();
             } else if(editing_point_index==-1){
-                wheel_cartesian = wheel_cartesian.concat([[x,y]])
+                wheel_cartesian = wheel_cartesian.concat([[x,y]]);
                 calculate_polars();
                 calculate_cartesian();
             }
             redrawWheel();
+            calculate_road_pattern();
             calculate_road();
             calculate_road_wheel();
+            calculate_road_bis();
             redrawRoad();
+            redrawRoadBis();
         }
     };
     
@@ -137,9 +180,12 @@ wheel_canvas.addEventListener('mouseup', function(event) {
         WHEEL_EDITING_ON = false;
         calculate_cartesian();
         redrawWheel();
+        calculate_road_pattern();
         calculate_road();
         calculate_road_wheel();
+        calculate_road_bis();
         redrawRoad();
+        redrawRoadBis();
     };
     
 });
@@ -153,15 +199,19 @@ new_wheel_btn.addEventListener('click', function(event){
     wheel_polar = [];
     WHEEL_DRAWING=true;
     WHEEL_EDITING=false;
+    edit_wheel_btn.textContent = "Edit Wheel OFF";
 });
 
 finish_wheel_btn.addEventListener('click', function(event){
     WHEEL_DRAWING=false;
     WHEEL_EDITING=false;
     redrawWheel();
+    calculate_road_pattern();
     calculate_road();
     calculate_road_wheel();
+    calculate_road_bis();
     redrawRoad();
+    redrawRoadBis();
 });
 
 edit_wheel_btn.addEventListener('click', function(event){
@@ -174,9 +224,12 @@ edit_wheel_btn.addEventListener('click', function(event){
         edit_wheel_btn.textContent = "Edit Wheel ON";
     };
     redrawWheel();
+    calculate_road_pattern();
     calculate_road();
     calculate_road_wheel();
+    calculate_road_bis();
     redrawRoad();
+    redrawRoadBis();
 });
 
 
@@ -185,6 +238,9 @@ edit_wheel_btn.addEventListener('click', function(event){
 
 calculate_polars();
 redrawWheel();
+calculate_road_pattern();
 calculate_road();
 calculate_road_wheel();
 redrawRoad();
+calculate_road_bis();
+redrawRoadBis();

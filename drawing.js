@@ -1,12 +1,3 @@
-var LightenColor = function(color, percent) {
-    var num = parseInt(color,16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) + amt,
-    B = (num >> 8 & 0x00FF) + amt,
-    G = (num & 0x0000FF) + amt;
-    return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
-};
-
 function drawCircle(ctx, c_x,c_y, radius, colorFill, colorStroke){
     ctx.beginPath();
     ctx.arc(c_x, c_y, radius, 0, 2 * Math.PI);
@@ -47,6 +38,8 @@ function drawPath(canvas, ctx, points, colorFill, colorStroke, closePath=true, d
     ctx.stroke();
 }
 
+
+
 function redrawWheel(finish=true){
     wheel_ctx.clearRect(0, 0, wheel_canvas.width, wheel_canvas.height);
     centeredCircle(wheel_canvas, wheel_ctx, 
@@ -67,14 +60,16 @@ function redrawWheel(finish=true){
     centeredCircle(wheel_canvas, wheel_ctx, 1, "#000", "#000");
 }
 
-
 function redrawRoad(){
     road_ctx.clearRect(0, 0, road_canvas.width, road_canvas.height);
     drawPath(road_canvas, road_ctx, road, "#96FFAA", "#438855", true, false);
     drawPath(road_canvas, road_ctx, road_wheel_cartesian, "#61D8FF", "#309488", true, false);
+    drawCircle(road_ctx, road_wheel_x,road_wheel_y, 1, "#000", "#000")
+}
 
-    road_ctx.beginPath();
-    road_ctx.arc(road_wheel_x, road_wheel_y, 2, 0, 2 * Math.PI);
-    road_ctx.fillStyle = "#000";
-    road_ctx.fill();
+function redrawRoadBis(){
+    road_ctx_bis.clearRect(0, 0, road_canvas_bis.width, road_canvas_bis.height);
+    drawPath(road_canvas_bis, road_ctx_bis, road_bis, "#96FFAA", "#438855", true, false);
+    drawPath(road_canvas_bis, road_ctx_bis, road_wheel_bis_cartesian, "#61D8FF", "#309488", true, false);
+    drawCircle(road_ctx_bis, road_wheel_bis_x,road_wheel_bis_y, 1, "#000", "#000")
 }
