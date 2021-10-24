@@ -147,7 +147,7 @@ function calculate_demo_bis(NB_PTS=250){
     while(demo_bis_x<0){
         demo_bis_x += road_pattern_length;
     }
-    while(demo_bis_x>road_pattern_length){
+    while(demo_bis_x>=road_pattern_length){
         demo_bis_x -= road_pattern_length;
     }
     x = 0;

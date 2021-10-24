@@ -1,8 +1,5 @@
 var wheel_canvas = document.getElementById("wheel_canvas");
 var wheel_ctx = wheel_canvas.getContext('2d');
-
-// wheelLeft = wheel_canvas.offsetLeft + wheel_canvas.clientLeft + wheel_canvas.width/2;
-// wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop + wheel_canvas.height/2;
 var wheelLeft = wheel_canvas.offsetLeft + wheel_canvas.clientLeft;
 var wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
 var wheelCenter_x = wheel_canvas.width/2;
@@ -77,21 +74,21 @@ demo_canvas.addEventListener('mouseup', function(event) {
 
 demo_canvas_bis.addEventListener('mousedown', function(event) {
     DEMO_MOUSE_DOWN_BIS = true;
-    DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft;
+    DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft_bis;
     calculate_demo_bis();
     redrawDemoBis();
 });
 demo_canvas_bis.addEventListener('mousemove', function(event) {
     if(DEMO_MOUSE_DOWN_BIS){
-        demo_bis_x -= (event.pageX-demoLeft)-DEMO_MOUSE_DOWN_BIS_X;
-        DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft;
+        demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
+        DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft_bis;
         calculate_demo_bis();
         redrawDemoBis();
     }
 });
 demo_canvas_bis.addEventListener('mouseup', function(event) {
     DEMO_MOUSE_DOWN_BIS = false;
-    demo_bis_x -= (event.pageX-demoLeft)-DEMO_MOUSE_DOWN_BIS_X;
+    demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
     calculate_demo_bis();
     redrawDemoBis();
 });
