@@ -45,7 +45,9 @@ function redrawWheel(finish=true){
     centeredCircle(wheel_canvas, wheel_ctx, 
         Math.min(wheel_canvas.width, wheel_canvas.height)*1/2.2,
         "#a4e8ff77", "#a4e8ff00");
-    drawPath(wheel_canvas, wheel_ctx, wheel_cartesian, "#61D8FF", "#309488", finish);
+    if(wheel_cartesian.length>0){
+        drawPath(wheel_canvas, wheel_ctx, wheel_cartesian, "#61D8FF", "#309488", finish);
+    }
     //// for debugging the radius functions:
     // wheel_cartesian2 = []
     // n=100
@@ -59,14 +61,12 @@ function redrawWheel(finish=true){
         "#a4e8ff55", "#a4e8ff00");
     centeredCircle(wheel_canvas, wheel_ctx, 1, "#000", "#000");
 }
-
 function redrawDemo(){
     demo_ctx.clearRect(0, 0, demo_canvas.width, demo_canvas.height);
     drawPath(demo_canvas, demo_ctx, road, "#96FFAA", "#438855", true, false);
     drawPath(demo_canvas, demo_ctx, demo_wheel_cartesian, "#61D8FF", "#309488", true, false);
     drawCircle(demo_ctx, demo_wheel_x,demo_wheel_y, 1, "#000", "#000")
 }
-
 function redrawDemoBis(){
     demo_ctx_bis.clearRect(0, 0, demo_canvas_bis.width, demo_canvas_bis.height);
     drawPath(demo_canvas_bis, demo_ctx_bis, road_bis, "#96FFAA", "#438855", true, false);

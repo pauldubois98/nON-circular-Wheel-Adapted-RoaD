@@ -15,3 +15,9 @@ canvas{
     border: 2px black solid;
     margin: 1px;
 }
+p{
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    font-style: italic;
+}

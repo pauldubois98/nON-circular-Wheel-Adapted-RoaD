@@ -18,8 +18,7 @@ var demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
 var edit_wheel_btn = document.getElementById("edit_wheel_btn");
-var WHEEL_DRAWING = false;
-var WHEEL_EDITING = false;
+var WHEEL_EDITING = true;
 var WHEEL_EDITING_ON = false;
 var editing_point_index;
 var editing_start_x;
@@ -65,11 +64,21 @@ demo_canvas.addEventListener('mousemove', function(event) {
         redrawDemo();
     }
 });
+demo_canvas.addEventListener('mouseleave', function(event) {
+    if(DEMO_MOUSE_DOWN){
+        DEMO_MOUSE_DOWN = false;
+        demo_wheel_x = event.pageX-demoLeft;
+        calculate_demo_wheel();
+        redrawDemo();
+    }
+});
 demo_canvas.addEventListener('mouseup', function(event) {
-    DEMO_MOUSE_DOWN = false;
-    demo_wheel_x = event.pageX-demoLeft;
-    calculate_demo_wheel();
-    redrawDemo();
+    if(DEMO_MOUSE_DOWN){
+        DEMO_MOUSE_DOWN = false;
+        demo_wheel_x = event.pageX-demoLeft;
+        calculate_demo_wheel();
+        redrawDemo();
+    }
 });
 
 demo_canvas_bis.addEventListener('mousedown', function(event) {
@@ -86,35 +95,25 @@ demo_canvas_bis.addEventListener('mousemove', function(event) {
         redrawDemoBis();
     }
 });
+demo_canvas_bis.addEventListener('mouseleave', function(event) {
+    if(DEMO_MOUSE_DOWN_BIS){
+        DEMO_MOUSE_DOWN_BIS = false;
+        demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
+        calculate_demo_bis();
+        redrawDemoBis();
+    }
+});
 demo_canvas_bis.addEventListener('mouseup', function(event) {
-    DEMO_MOUSE_DOWN_BIS = false;
-    demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
-    calculate_demo_bis();
-    redrawDemoBis();
+    if(DEMO_MOUSE_DOWN_BIS){
+        DEMO_MOUSE_DOWN_BIS = false;
+        demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
+        calculate_demo_bis();
+        redrawDemoBis();
+    }
 });
 
 
 
-wheel_canvas.addEventListener('click', function(event) {
-    // console.log('[' + (event.pageX-wheelLeft) + ',' + (event.pageY-wheelTop) +']');
-    // console.log('[' + (event.pageX-wheelLeft-wheelCenter_x) + ',' + -(event.pageY-wheelTop-wheelCenter_y) +']');
-    // console.log('[' + polar(event.pageX-wheelLeft,event.pageY-wheelTop) +']');
-    if(WHEEL_DRAWING){
-        wheel_cartesian = wheel_cartesian.concat( [[event.pageX-wheelLeft, event.pageY-wheelTop]] );
-        calculate_polars();
-        calculate_cartesian();
-        redrawWheel(false);
-        if(wheel_cartesian.length>2){
-            calculate_road_pattern();
-            calculate_demo_road();
-            calculate_demo_wheel();
-            redrawDemo();
-            calculate_demo_bis();
-            redrawDemoBis();
-        }
-    };
-    
-});
 wheel_canvas.addEventListener('mousedown', function(event) {
     var x = event.pageX-wheelLeft;
     var y = event.pageY-wheelTop;
@@ -147,13 +146,7 @@ wheel_canvas.addEventListener('mousedown', function(event) {
                 calculate_polars();
                 calculate_cartesian();
             }
-            redrawWheel();
-            calculate_road_pattern();
-            calculate_demo_road();
-            calculate_demo_wheel();
-            calculate_demo_bis();
-            redrawDemo();
-            redrawDemoBis();
+            calculate_all();
         }
     };
     
@@ -175,14 +168,7 @@ wheel_canvas.addEventListener('mousemove', function(event) {
 wheel_canvas.addEventListener('mouseup', function(event) {
     if(WHEEL_EDITING_ON){
         WHEEL_EDITING_ON = false;
-        calculate_cartesian();
-        redrawWheel();
-        calculate_road_pattern();
-        calculate_demo_road();
-        calculate_demo_wheel();
-        calculate_demo_bis();
-        redrawDemo();
-        redrawDemoBis();
+        calculate_all();
     };
     
 });
@@ -194,25 +180,11 @@ wheel_canvas.oncontextmenu = function(e){
 new_wheel_btn.addEventListener('click', function(event){
     wheel_cartesian = [];
     wheel_polar = [];
-    WHEEL_DRAWING=true;
-    WHEEL_EDITING=false;
-    edit_wheel_btn.textContent = "Edit Wheel OFF";
+    WHEEL_EDITING=true;
+    edit_wheel_btn.textContent = "Edit Wheel ON";
+    calculate_all();
 });
-
-finish_wheel_btn.addEventListener('click', function(event){
-    WHEEL_DRAWING=false;
-    WHEEL_EDITING=false;
-    redrawWheel();
-    calculate_road_pattern();
-    calculate_demo_road();
-    calculate_demo_wheel();
-    calculate_demo_bis();
-    redrawDemo();
-    redrawDemoBis();
-});
-
 edit_wheel_btn.addEventListener('click', function(event){
-    WHEEL_DRAWING=false;
     if (WHEEL_EDITING){
         WHEEL_EDITING=false;
         edit_wheel_btn.textContent = "Edit Wheel OFF";
@@ -220,24 +192,33 @@ edit_wheel_btn.addEventListener('click', function(event){
         WHEEL_EDITING=true;
         edit_wheel_btn.textContent = "Edit Wheel ON";
     };
-    redrawWheel();
-    calculate_road_pattern();
-    calculate_demo_road();
-    calculate_demo_wheel();
-    calculate_demo_bis();
-    redrawDemo();
-    redrawDemoBis();
+    calculate_all();
 });
 
 
 
+function calculate_all(){
+    calculate_polars();
+    calculate_cartesian();
+    redrawWheel();
+    if(wheel_cartesian.length>2){
+        var i = 1;
+        var angles = [wheel_polar[0][0]-wheel_polar[wheel_polar.length-1][0]+2*Math.PI]
+        while(i<wheel_polar.length){
+            angles = angles.concat([wheel_polar[i][0]-wheel_polar[i-1][0]])
+            i++;
+        }
+        if(Math.max(...angles)<Math.PI){
+            calculate_road_pattern();
+            calculate_demo_road();
+            calculate_demo_wheel();
+            redrawDemo();
+            calculate_demo_bis();
+            redrawDemoBis();
+        } else{
+            alert("Wheel not including the center.")
+        }
+    }
+}
 
-
-calculate_polars();
-redrawWheel();
-calculate_road_pattern();
-calculate_demo_road();
-calculate_demo_wheel();
-redrawDemo();
-calculate_demo_bis();
-redrawDemoBis();
+calculate_all();
