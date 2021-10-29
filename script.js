@@ -218,14 +218,29 @@ draw_star_btn.addEventListener('click', function(event){
     calculate_all();
 });
 draw_heart_btn.addEventListener('click', function(event){
-    wheel_polar = [ [-Math.PI/2, 110],
-                    [Math.PI/10, 115],
-                    [Math.PI/3, 115],
-                    [Math.PI/2, 55],
-                    [2*Math.PI/3, 115],
-                    [9*Math.PI/10, 115] ];
+    var n = 14;
+    wheel_polar = []
+    for(var i=0; i<n; i++){
+        t = 2*Math.PI*i/n-Math.PI;
+        //heart curve credits: https://mathworld.wolfram.com/HeartCurve.html
+        r = Math.sin(t)*Math.sqrt(Math.abs(Math.cos(t))) / (Math.sin(t) + 1.4) - 2*Math.sin(t) + 2;
+        wheel_polar = wheel_polar.concat([[t,55*r]]);
+    }
+    wheel_polar = wheel_polar.concat([[-Math.PI/2,175]]);
+    wheel_polar = wheel_polar.sort(function (a,b){return a[0]-b[0]});
     calculate_cartesian();
+    for(var i=0; i<wheel_cartesian.length; i++){
+        wheel_cartesian[i][1] -= 60;
+    }
     calculate_all();
+    // wheel_polar = [ [-Math.PI/2, 110],
+    //                 [Math.PI/10, 115],
+    //                 [Math.PI/3, 115],
+    //                 [Math.PI/2, 55],
+    //                 [2*Math.PI/3, 115],
+    //                 [9*Math.PI/10, 115] ];
+    // calculate_cartesian();
+    // calculate_all();
 });
 
 
