@@ -68,11 +68,14 @@ function angle(alpha){
     angle_rA = Math.asin(sin_angle_rA);
     angle_rB = Math.asin(sin_angle_rB);
 
-    if(angle_rA<Math.PI/2){
+    r_alpha = (rA*sin_angle_rB)/(Math.sin( (Math.PI-angle_rB-( (alpha-angleA+(2*Math.PI))%(2*Math.PI) ) ) ));
+    r_alpha_bis = (rB*sin_angle_rA)/(Math.sin( (Math.PI-angle_rA-( (angleB-alpha+(2*Math.PI))%(2*Math.PI) ) ) ));
+    
+    if(r_alpha_bis >= r_alpha){
         angle_alpha = Math.PI/2 - (Math.PI - angle_rA - (angleB-alpha));
         return angle_alpha;
-    } else{ // then angle_rB<Math.PI/2
-        angle_alpha_bis = (Math.PI - angle_rB - (alpha-angleA)) - Math.PI/2;
+    } else{
+        angle_alpha_bis = - ( (Math.PI - angle_rB - (alpha-angleA)) - Math.PI/2 );
         return angle_alpha_bis;
     }
 }
