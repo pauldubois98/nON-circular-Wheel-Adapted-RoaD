@@ -199,6 +199,34 @@ edit_wheel_btn.addEventListener('click', function(event){
     };
     calculate_all();
 });
+draw_polygon_btn.addEventListener('click', function(event){
+    var n = number_sides_polygon_input.value;
+    wheel_polar = []
+    for(var i=0; i<n; i++){
+        wheel_polar = wheel_polar.concat([[2*Math.PI*i/n-Math.PI, 120]]);
+    }
+    calculate_cartesian();
+    calculate_all();
+});
+draw_star_btn.addEventListener('click', function(event){
+    var n = 2*number_spikes_star_input.value;
+    wheel_polar = []
+    for(var i=0; i<n; i++){
+        wheel_polar = wheel_polar.concat([[2*Math.PI*i/n-Math.PI, 100+(30*((-1)**i))]]);
+    }
+    calculate_cartesian();
+    calculate_all();
+});
+draw_heart_btn.addEventListener('click', function(event){
+    wheel_polar = [ [-Math.PI/2, 110],
+                    [Math.PI/10, 115],
+                    [Math.PI/3, 115],
+                    [Math.PI/2, 55],
+                    [2*Math.PI/3, 115],
+                    [9*Math.PI/10, 115] ];
+    calculate_cartesian();
+    calculate_all();
+});
 
 
 function calculate_all(){
