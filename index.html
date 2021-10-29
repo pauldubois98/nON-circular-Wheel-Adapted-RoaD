@@ -23,10 +23,18 @@
         <h2>nON-circular Wheel Adapted RoaD</h2>
     </header>
     <main>
-        <div>
-            <button id="new_wheel_btn">New Wheel</button>
-            <button id="edit_wheel_btn">Edit Wheel ON</button>
-        </div>
+        <nav>
+            <button id="new_wheel_btn"><img src="svg/restart_black_24dp.svg" class="icon">New Wheel</button>
+            <button id="edit_wheel_btn"><img src="svg/gesture_black_24dp.svg" class="icon">Edit ON</button>
+            <span style="width: 60px;"></span>
+            <input id="number_sides_polygon" type="number" min="3" max="50" placeholder="7" value="7" step="1" style="width: 50px;">
+            <button id="draw_polygon"><img src="svg/octogone_black_24dp.svg" class="icon">Polygon</button>
+            <span style="width: 20px;"></span>
+            <input id="number_spikes_star" type="number" min="2" max="10" placeholder="5" value="5" step="1" style="width: 50px;">
+            <button id="draw_star"><img src="svg/star_black_24dp.svg" class="icon">Star</button>
+            <span style="width: 20px;"></span>
+            <button id="draw_heart"><img src="svg/heart_black_24dp.svg" class="icon">Heart</button>
+        </nav>
         <br>
         <canvas id="wheel_canvas" height="300" width="400"></canvas>
         <br>

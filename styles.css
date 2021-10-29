@@ -15,6 +15,23 @@ canvas{
     border: 2px black solid;
     margin: 1px;
 }
+nav{
+    display: flex;
+}
+input{
+    border-radius: 5px;
+    border: 2x;
+}
+button{
+    display: inline-flex;
+    align-items: center;
+}
+.icon{
+    margin-right: 5px;
+}
+button:hover{
+    filter: invert(95%);
+}
 p{
     margin: 0;
     margin-bottom: 5px;

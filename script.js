@@ -18,6 +18,11 @@ var demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
 var edit_wheel_btn = document.getElementById("edit_wheel_btn");
+var draw_polygon_btn = document.getElementById("draw_polygon");
+var number_sides_polygon_input = document.getElementById("number_sides_polygon");
+var draw_star_btn = document.getElementById("draw_star");
+var number_spikes_star_input = document.getElementById("number_spikes_star");
+var draw_heart_btn = document.getElementById("draw_heart");
 var WHEEL_EDITING = true;
 var WHEEL_EDITING_ON = false;
 var editing_point_index;
@@ -181,20 +186,19 @@ new_wheel_btn.addEventListener('click', function(event){
     wheel_cartesian = [];
     wheel_polar = [];
     WHEEL_EDITING=true;
-    edit_wheel_btn.textContent = "Edit Wheel ON";
+    edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\"> Edit ON";
     calculate_all();
 });
 edit_wheel_btn.addEventListener('click', function(event){
     if (WHEEL_EDITING){
         WHEEL_EDITING=false;
-        edit_wheel_btn.textContent = "Edit Wheel OFF";
+        edit_wheel_btn.innerHTML = "<img src=\"svg/no_gesture_black_24dp.svg\"> Edit OFF";
     } else{
         WHEEL_EDITING=true;
-        edit_wheel_btn.textContent = "Edit Wheel ON";
+        edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\"> Edit ON";
     };
     calculate_all();
 });
-
 
 
 function calculate_all(){
