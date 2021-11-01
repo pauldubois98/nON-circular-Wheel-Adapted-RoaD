@@ -36,6 +36,7 @@ var wheel_polar = [];
 
 var road_pattern = [];
 var road_pattern_length = 0;
+var ROAD_FLOOR = 25;
 
 var road = [];
 var demo_wheel_x = demo_canvas.width/2;
@@ -201,6 +202,8 @@ edit_wheel_btn.addEventListener('click', function(event){
 });
 draw_polygon_btn.addEventListener('click', function(event){
     var n = number_sides_polygon_input.value;
+    n = check(n, false, true, 3, true, 200);
+    number_sides_polygon_input.value = n;
     wheel_polar = []
     for(var i=0; i<n; i++){
         wheel_polar = wheel_polar.concat([[2*Math.PI*i/n-Math.PI, 120]]);
@@ -209,10 +212,12 @@ draw_polygon_btn.addEventListener('click', function(event){
     calculate_all();
 });
 draw_star_btn.addEventListener('click', function(event){
-    var n = 2*number_spikes_star_input.value;
+    var n = number_spikes_star_input.value;
+    n = check(n, false, true, 2, true, 15);
+    number_spikes_star_input.value = n;
     wheel_polar = []
-    for(var i=0; i<n; i++){
-        wheel_polar = wheel_polar.concat([[2*Math.PI*i/n-Math.PI, 100+(30*((-1)**i))]]);
+    for(var i=0; i<2*n; i++){
+        wheel_polar = wheel_polar.concat([[2*Math.PI*i/(2*n)-Math.PI, 100+(30*((-1)**i))]]);
     }
     calculate_cartesian();
     calculate_all();

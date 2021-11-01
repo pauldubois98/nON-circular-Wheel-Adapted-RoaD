@@ -105,7 +105,7 @@ function calculate_road_pattern(NB_PTS=250){
         dr = Math.sqrt(y_prev**2 + y**2 - 2*y*y_prev*Math.cos(2*Math.PI/NB_PTS));
         dx = dr*Math.cos(angle(alpha))
         x = x+dx;
-        road_pattern = road_pattern.concat([[dx,y+(demo_canvas.height-radius_max),alpha]]);
+        road_pattern = road_pattern.concat([[dx,y+(demo_canvas.height-radius_max)-ROAD_FLOOR,alpha]]);
     }
     road_pattern_length = x;
 }
@@ -129,7 +129,7 @@ function calculate_demo_wheel(){
     while(road[i][0]<demo_wheel_x && i<road.length-3){
         i++;
     }
-    demo_wheel_y = demo_canvas.height-radius_max
+    demo_wheel_y = demo_canvas.height-radius_max-ROAD_FLOOR;
     if(Math.abs(road[i+1][2]-road[i][2])>Math.PI){
         demo_wheel_angle = road[i][2]+((demo_wheel_x-road[i][0])*(road[i+1][2]-road[i][2]+2*Math.PI)/(road[i+1][0]-road[i][0]));
     } else{
@@ -181,7 +181,7 @@ function calculate_demo_bis(NB_PTS=250){
     while(road_bis[i][0]<demo_wheel_bis_x && i<road_bis.length-3){
         i++;
     }
-    demo_wheel_bis_y = demo_canvas_bis.height-radius_max;
+    demo_wheel_bis_y = demo_canvas_bis.height-radius_max-ROAD_FLOOR;
     if(Math.abs(road_bis[i+1][2]-road_bis[i][2])>Math.PI){
         demo_wheel_bis_angle = road_bis[i][2]+((demo_wheel_bis_x-road_bis[i][0])*(road_bis[i+1][2]-road_bis[i][2]+2*Math.PI)/(road_bis[i+1][0]-road_bis[i][0]));
     } else{
@@ -194,4 +194,19 @@ function calculate_demo_bis(NB_PTS=250){
         var r = wheel_polar[j][1];
         demo_wheel_bis_cartesian = demo_wheel_bis_cartesian.concat([ cartesian(a, r, c_x=demo_wheel_bis_x, c_y=demo_wheel_bis_y) ]);
     }
+}
+
+
+
+function check(n, integer=true, mini=true, mini_val=3, maxi=true, maxi_val=20){
+    if(mini && n<mini_val){
+        return mini_val;
+    }
+    if(maxi && n>maxi_val){
+        return maxi_val;
+    }
+    if(integer && n!=Math.round(n)){
+        return Math.round(n);
+    }
+    return n;
 }
