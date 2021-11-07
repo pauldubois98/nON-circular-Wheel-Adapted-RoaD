@@ -55,6 +55,7 @@ var demo_wheel_bis_angle = 0;
 var DEMO_MOUSE_DOWN_BIS = false;
 var DEMO_MOUSE_DOWN_BIS_X = 0;
 
+var collision_points_indexes = [];
 
 
 demo_canvas.addEventListener('mousedown', function(event) {
@@ -252,6 +253,7 @@ draw_heart_btn.addEventListener('click', function(event){
 function calculate_all(){
     calculate_polars();
     calculate_cartesian();
+    local_collision();
     redrawWheel();
     if(wheel_cartesian.length>2){
         var i = 1;

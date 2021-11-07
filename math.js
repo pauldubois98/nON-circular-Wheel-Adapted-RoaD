@@ -82,6 +82,30 @@ function angle(alpha){
 
 
 
+function local_collision(){
+    collision_points_indexes = [];
+    var collide = false;
+    for(i=0; i<wheel_cartesian.length; i++){
+        j = (i+1)%wheel_cartesian.length;
+        k = (i+2)%wheel_cartesian.length;
+        var A = Math.sqrt( ((wheel_cartesian[i][0]-wheel_cartesian[j][0])**2) 
+                         + ((wheel_cartesian[i][1]-wheel_cartesian[j][1])**2) );
+        var B = Math.sqrt( ((wheel_cartesian[k][0]-wheel_cartesian[j][0])**2) 
+                         + ((wheel_cartesian[k][1]-wheel_cartesian[j][1])**2) );
+        var C = Math.sqrt( ((wheel_cartesian[i][0]-wheel_cartesian[k][0])**2) 
+                         + ((wheel_cartesian[i][1]-wheel_cartesian[k][1])**2) );
+        // C**2 = A**2 + B**2 - 2*A*C*cos(angle_C)
+        var angle_C = Math.acos( ( (A**2) + (B**2) - (C**2) ) / (2*A*B) );
+        if(angle_C<Math.PI/2){
+            collision_points_indexes = collision_points_indexes.concat([j]);
+            collide = true;
+        }
+    }
+    collision_points_indexes = collision_points_indexes.sort();
+    return collide;
+}
+
+
 
 function calculate_road_pattern(NB_PTS=250){
     radius_max = 0;
