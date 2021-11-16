@@ -79,12 +79,21 @@ function angle(alpha){
         return angle_alpha_bis;
     }
 }
-
+function height(pos_x){
+    x = 0;
+    i = 0;
+    while(x<=pos_x){
+        x += road_pattern[i][0];
+        i++;
+    }
+    i--;
+    x -= road_pattern[i][0];
+    return road_pattern[i][1] + (pos_x-x)*(road_pattern[(i+1)%road_pattern.length][1]-road_pattern[i][1])/road_pattern[i][0];
+}
 
 
 function local_collision(){
-    collision_points_indexes = [];
-    var collide = false;
+    local_collision_points_indexes = [];
     for(i=0; i<wheel_cartesian.length; i++){
         j = (i+1)%wheel_cartesian.length;
         k = (i+2)%wheel_cartesian.length;
@@ -97,14 +106,42 @@ function local_collision(){
         // C**2 = A**2 + B**2 - 2*A*C*cos(angle_C)
         var angle_C = Math.acos( ( (A**2) + (B**2) - (C**2) ) / (2*A*B) );
         if(angle_C<Math.PI/2){
-            collision_points_indexes = collision_points_indexes.concat([j]);
-            collide = true;
+            local_collision_points_indexes = local_collision_points_indexes.concat([j]);
         }
     }
-    collision_points_indexes = collision_points_indexes.sort();
-    return collide;
+    local_collision_points_indexes = local_collision_points_indexes.sort();
+    return local_collision_points_indexes.length != 0;
 }
-
+function global_collision(TOL_ANGLE=0.4){
+    global_collision_points_indexes = []
+    if(road_pattern!=undefined){
+        var x = 0;
+        for(var i=0; i<road_pattern.length; i++){
+            x+= road_pattern[i][0];
+            for(var j=0; j<wheel_polar.length; j++){
+                var an = (wheel_polar[j][0]-road_pattern[i][2]+(3.5*Math.PI))%(2*Math.PI);
+                if( an < 1.5*Math.PI - TOL_ANGLE || an > 1.5*Math.PI + TOL_ANGLE){
+                    var r = wheel_polar[j][1];
+                    var wheel_y = demo_canvas.height-radius_max-ROAD_FLOOR-Math.sin(an)*r;
+                    var road_x = (x+Math.cos(an)*r + road_pattern_length)%road_pattern_length;
+                    var road_y = height(road_x)
+                    if( wheel_y > road_y){
+                        global_collision_points_indexes = global_collision_points_indexes.concat([[i,j,an]]);
+                        // // For debug:
+                        // demo_ctx.beginPath();
+                        // demo_ctx.moveTo(x,demo_canvas.height-radius_max-ROAD_FLOOR);
+                        // // demo_ctx.lineTo(road_x,road_y);
+                        // demo_ctx.lineTo(road_x,wheel_y);
+                        // demo_ctx.strokeStyle = "#000";
+                        // demo_ctx.stroke();
+                    }
+                }
+                
+            }
+        }
+    }
+    return global_collision_points_indexes.length != 0;
+}
 
 
 function calculate_road_pattern(NB_PTS=250){
@@ -133,7 +170,7 @@ function calculate_road_pattern(NB_PTS=250){
     }
     road_pattern_length = x;
 }
-function calculate_demo_road(NB_PTS=250){
+function calculate_demo_road(){
     var i = 0;
     var x = 0;
     road = [[0,demo_canvas_bis.height,0]];
@@ -169,7 +206,7 @@ function calculate_demo_wheel(){
         demo_wheel_cartesian = demo_wheel_cartesian.concat([ cartesian(a, r, c_x=demo_wheel_x, c_y=demo_wheel_y) ]);
     }
 }
-function calculate_demo_bis(NB_PTS=250){
+function calculate_demo_bis(){
     // finding start
     while(demo_bis_x<0){
         demo_bis_x += road_pattern_length;
