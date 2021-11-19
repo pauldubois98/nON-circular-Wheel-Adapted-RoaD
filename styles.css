@@ -17,6 +17,44 @@ canvas{
 }
 nav{
     display: flex;
+    flex-direction: row;
+}
+#nav-left{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+#nav-right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#nav-left div{
+    display: flex;
+    margin: 1px;
+    height: 1.75em;
+}
+#nav-right div{
+    display: flex;
+    margin: 1px;
+    height: 1.75em;
+}
+#nav-left div:first-child{
+    margin-bottom: 3px;
+}
+#nav-right div:first-child{
+    margin-bottom: 3px;
+}
+#nav-left div:last-child{
+    margin-top: 3px;
+}
+#nav-right div:last-child{
+    margin-top: 3px;
+}
+p{
+    padding: 0;
+    padding-right: 5px;
+    margin: auto;
 }
 input{
     border-radius: 5px;
@@ -32,7 +70,7 @@ button{
 button:hover{
     filter: invert(95%);
 }
-p{
+.expl{
     margin: 0;
     margin-bottom: 5px;
     padding: 0;

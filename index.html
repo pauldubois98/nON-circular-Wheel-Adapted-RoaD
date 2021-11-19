@@ -24,21 +24,45 @@
     </header>
     <main>
         <nav>
-            <button id="new_wheel_btn"><img src="svg/restart_black_24dp.svg" class="icon">New Wheel</button>
-            <button id="edit_wheel_btn"><img src="svg/gesture_black_24dp.svg" class="icon">Edit ON</button>
-            <span style="width: 60px;"></span>
-            <input id="number_sides_polygon" type="number" min="3" max="50" placeholder="7" value="7" step="1" style="width: 50px;">
-            <button id="draw_polygon"><img src="svg/octogone_black_24dp.svg" class="icon">Polygon</button>
-            <span style="width: 20px;"></span>
-            <input id="number_spikes_star" type="number" min="2" max="10" placeholder="5" value="5" step="1" style="width: 50px;">
-            <button id="draw_star"><img src="svg/star_black_24dp.svg" class="icon">Star</button>
-            <span style="width: 20px;"></span>
-            <button id="draw_heart"><img src="svg/heart_black_24dp.svg" class="icon">Heart</button>
+            <div id="nav-left">
+                <div>
+                    <button id="edit_wheel_btn"><img src="svg/gesture_black_24dp.svg" class="icon">Edit ON</button>
+                </div>
+                <div>
+                    <p>Sides:</p>
+                    <input id="number_sides_polygon" type="number" min="3" max="50" placeholder="7" value="7" step="1" style="width: 50px;">
+                </div>
+                <div>
+                    <!-- 
+                    <p>Ratio:</p>
+                    <input id="ratio_star" type="number" min="0.1" max="1" placeholder="0.5" value="0.5" step="0.01" style="width: 50px;">
+                    <span style="width: 2em;"></span>
+                    -->
+                    <p>Spikes:</p>
+                    <input id="number_spikes_star" type="number" min="2" max="10" placeholder="5" value="5" step="1" style="width: 50px;">
+                </div>
+                <div>
+                </div>
+            </div>
+            <div id="nav-right">
+                <div>
+                    <button id="new_wheel_btn"><img src="svg/restart_black_24dp.svg" class="icon">New Wheel</button>
+                </div>
+                <div>
+                    <button id="draw_polygon"><img src="svg/octogone_black_24dp.svg" class="icon">Polygon</button>
+                </div>
+                <div>
+                    <button id="draw_star"><img src="svg/star_black_24dp.svg" class="icon">Star</button>
+                </div>
+                <div>
+                    <button id="draw_heart"><img src="svg/heart_black_24dp.svg" class="icon">Heart</button>
+                </div>
+            </div>
         </nav>
         <br>
         <canvas id="wheel_canvas" height="300" width="400"></canvas>
         <br>
-        <p>(right click to add/delete a point; left click to move a point)</p>
+        <p class="expl">(right click to add/delete a point; left click to move a point)</p>
         <br>
         <canvas id="demo_canvas" height="310" width="850"></canvas>
         <br>
