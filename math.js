@@ -92,7 +92,7 @@ function height(pos_x){
 }
 
 
-function local_collision(){
+function local_collision(UPDATE_ICON=true){
     local_collision_points_indexes = [];
     for(i=0; i<wheel_cartesian.length; i++){
         j = (i+1)%wheel_cartesian.length;
@@ -110,9 +110,16 @@ function local_collision(){
         }
     }
     local_collision_points_indexes = local_collision_points_indexes.sort();
+    if(UPDATE_ICON){
+        if(local_collision_points_indexes.length != 0){
+            local_collision_icon.src="svg/local_red_24dp.svg"
+        } else{
+            local_collision_icon.src="svg/local_green_24dp.svg"
+        }
+    }
     return local_collision_points_indexes.length != 0;
 }
-function global_collision(TOL_ANGLE=0.4){
+function global_collision(TOL_ANGLE=0.4, UPDATE_ICON=true){
     global_collision_points_indexes = []
     if(road_pattern!=undefined){
         var x = 0;
@@ -124,7 +131,7 @@ function global_collision(TOL_ANGLE=0.4){
                     var r = wheel_polar[j][1];
                     var wheel_y = demo_canvas.height-radius_max-ROAD_FLOOR-Math.sin(an)*r;
                     var road_x = (x+Math.cos(an)*r + road_pattern_length)%road_pattern_length;
-                    var road_y = height(road_x)
+                    var road_y = height(road_x);
                     if( wheel_y > road_y){
                         global_collision_points_indexes = global_collision_points_indexes.concat([[i,j,an]]);
                         // // For debug:
@@ -140,6 +147,13 @@ function global_collision(TOL_ANGLE=0.4){
             }
         }
     }
+    if(UPDATE_ICON){
+        if(global_collision_points_indexes.length != 0){
+            global_collision_icon.src="svg/global_red_24dp.svg"
+        } else{
+            global_collision_icon.src="svg/global_green_24dp.svg"
+        }
+    }
     return global_collision_points_indexes.length != 0;
 }
 
@@ -148,7 +162,7 @@ function calculate_road_pattern(NB_PTS=250){
     radius_max = 0;
     for(i=0; i<wheel_polar.length; i++){
         if(wheel_polar[i][1]>radius_max){
-            radius_max = wheel_polar[i][1]
+            radius_max = wheel_polar[i][1];
         }
     }
     road_pattern = [];
@@ -164,7 +178,7 @@ function calculate_road_pattern(NB_PTS=250){
         y_prev = y;
         y = radius(alpha);
         dr = Math.sqrt(y_prev**2 + y**2 - 2*y*y_prev*Math.cos(2*Math.PI/NB_PTS));
-        dx = dr*Math.cos(angle(alpha))
+        dx = dr*Math.cos(angle(alpha));
         x = x+dx;
         road_pattern = road_pattern.concat([[dx,y+(demo_canvas.height-radius_max)-ROAD_FLOOR,alpha]]);
     }

@@ -23,6 +23,10 @@ var number_sides_polygon_input = document.getElementById("number_sides_polygon")
 var draw_star_btn = document.getElementById("draw_star");
 var number_spikes_star_input = document.getElementById("number_spikes_star");
 var draw_heart_btn = document.getElementById("draw_heart");
+var local_collision_btn = document.getElementById("local_collision_btn");
+var local_collision_icon = document.getElementById("local_collision_icon");
+var global_collision_btn = document.getElementById("global_collision_btn");
+var global_collision_icon = document.getElementById("global_collision_icon");
 var WHEEL_EDITING = true;
 var WHEEL_EDITING_ON = false;
 var editing_point_index;
@@ -55,7 +59,8 @@ var demo_wheel_bis_angle = 0;
 var DEMO_MOUSE_DOWN_BIS = false;
 var DEMO_MOUSE_DOWN_BIS_X = 0;
 
-var collision_points_indexes = [];
+var local_collision_points_indexes = [];
+var global_collision_points_indexes = [];
 
 
 demo_canvas.addEventListener('mousedown', function(event) {
@@ -253,13 +258,12 @@ draw_heart_btn.addEventListener('click', function(event){
 function calculate_all(){
     calculate_polars();
     calculate_cartesian();
-    local_collision();
     redrawWheel();
     if(wheel_cartesian.length>2){
         var i = 1;
         var angles = [wheel_polar[0][0]-wheel_polar[wheel_polar.length-1][0]+2*Math.PI]
         while(i<wheel_polar.length){
-            angles = angles.concat([wheel_polar[i][0]-wheel_polar[i-1][0]])
+            angles = angles.concat([wheel_polar[i][0]-wheel_polar[i-1][0]]);
             i++;
         }
         if(Math.max(...angles)<Math.PI){
@@ -269,6 +273,8 @@ function calculate_all(){
             redrawDemo();
             calculate_demo_bis();
             redrawDemoBis();
+            local_collision();
+            global_collision();
         } else{
             alert("Wheel not including the center.")
         }
