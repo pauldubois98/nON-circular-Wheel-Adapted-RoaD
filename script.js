@@ -193,16 +193,16 @@ new_wheel_btn.addEventListener('click', function(event){
     wheel_cartesian = [];
     wheel_polar = [];
     WHEEL_EDITING=true;
-    edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\"> Edit ON";
+    edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\" class=\"icon\"> Edit ON";
     calculate_all();
 });
 edit_wheel_btn.addEventListener('click', function(event){
     if (WHEEL_EDITING){
         WHEEL_EDITING=false;
-        edit_wheel_btn.innerHTML = "<img src=\"svg/no_gesture_black_24dp.svg\"> Edit OFF";
+        edit_wheel_btn.innerHTML = "<img src=\"svg/no_gesture_black_24dp.svg\" class=\"icon\"> Edit OFF";
     } else{
         WHEEL_EDITING=true;
-        edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\"> Edit ON";
+        edit_wheel_btn.innerHTML = "<img src=\"svg/gesture_black_24dp.svg\" class=\"icon\"> Edit ON";
     };
     calculate_all();
 });
