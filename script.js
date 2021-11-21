@@ -23,6 +23,8 @@ var number_sides_polygon_input = document.getElementById("number_sides_polygon")
 var draw_star_btn = document.getElementById("draw_star");
 var number_spikes_star_input = document.getElementById("number_spikes_star");
 var draw_heart_btn = document.getElementById("draw_heart");
+var collision_btn = document.getElementById("collision_btn");
+var collision_icon = document.getElementById("collision_icon");
 var local_collision_btn = document.getElementById("local_collision_btn");
 var local_collision_icon = document.getElementById("local_collision_icon");
 var global_collision_btn = document.getElementById("global_collision_btn");
@@ -275,6 +277,7 @@ function calculate_all(){
             redrawDemoBis();
             local_collision();
             global_collision();
+            collision();
         } else{
             alert("Wheel not including the center.")
         }

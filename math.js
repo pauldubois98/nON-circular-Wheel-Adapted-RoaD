@@ -156,7 +156,17 @@ function global_collision(TOL_ANGLE=Math.PI/6, UPDATE_ICON=true){
     }
     return global_collision_points_indexes.length != 0;
 }
-
+function collision(TOL_ANGLE=Math.PI/6, UPDATE_ICON=true){
+    var collision = (local_collision_points_indexes.length != 0) || (global_collision_points_indexes.length != 0)
+    if(UPDATE_ICON){
+        if(collision){
+            collision_icon.src="svg/collision_red_24dp.svg"
+        } else{
+            collision_icon.src="svg/collision_green_24dp.svg"
+        }
+    }
+    return collision
+}
 
 function calculate_road_pattern(NB_PTS=250){
     radius_max = 0;
