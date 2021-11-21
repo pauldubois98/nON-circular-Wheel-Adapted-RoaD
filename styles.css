@@ -57,6 +57,7 @@ p{
     margin: auto;
 }
 input{
+    width: 50px;
     border-radius: 5px;
     border: 2x;
 }
@@ -64,11 +65,11 @@ button{
     display: inline-flex;
     align-items: center;
 }
-.icon{
-    margin-right: 5px;
-}
 button:hover{
     filter: invert(95%);
+}
+.icon{
+    margin-right: 5px;
 }
 .expl{
     margin: 0;

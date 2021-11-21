@@ -119,7 +119,7 @@ function local_collision(UPDATE_ICON=true){
     }
     return local_collision_points_indexes.length != 0;
 }
-function global_collision(TOL_ANGLE=0.4, UPDATE_ICON=true){
+function global_collision(TOL_ANGLE=Math.PI/6, UPDATE_ICON=true){
     global_collision_points_indexes = []
     if(road_pattern!=undefined){
         var x = 0;
