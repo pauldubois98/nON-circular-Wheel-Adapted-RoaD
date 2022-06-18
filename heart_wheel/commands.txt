@@ -1,0 +1,3 @@
+mogrify -fill white -opaque "#0000" -format jpg *.png
+convert -delay 2 -loop 0 *.jpg heart_wheel.gif
+rm *.png
