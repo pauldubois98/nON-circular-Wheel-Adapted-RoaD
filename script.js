@@ -71,13 +71,13 @@ function addListenerMulti(element, eventNames, listener) {
     }
 }
 
-demo_canvas.addEventListener('mousedown', function(event) {
+addListenerMulti(demo_canvas, "pointerdown mousedown", function (event) {
     DEMO_MOUSE_DOWN = true;
     demo_wheel_x = event.pageX-demoLeft;
     calculate_demo_wheel();
     redrawDemo();
 });
-demo_canvas.addEventListener('mousemove', function(event) {
+addListenerMulti(demo_canvas, "pointermove mousemove", function (event) {
     if(DEMO_MOUSE_DOWN){
         demo_wheel_x = event.pageX-demoLeft;
         calculate_demo_wheel();
@@ -92,7 +92,7 @@ demo_canvas.addEventListener('mouseleave', function(event) {
         redrawDemo();
     }
 });
-demo_canvas.addEventListener('mouseup', function(event) {
+addListenerMulti(demo_canvas, "pointerup mouseup", function (event) {
     if(DEMO_MOUSE_DOWN){
         DEMO_MOUSE_DOWN = false;
         demo_wheel_x = event.pageX-demoLeft;
@@ -101,13 +101,13 @@ demo_canvas.addEventListener('mouseup', function(event) {
     }
 });
 
-demo_canvas_bis.addEventListener('mousedown', function(event) {
+addListenerMulti(demo_canvas_bis, "pointerdown mousedown", function (event) {
     DEMO_MOUSE_DOWN_BIS = true;
     DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft_bis;
     calculate_demo_bis();
     redrawDemoBis();
 });
-demo_canvas_bis.addEventListener('mousemove', function(event) {
+addListenerMulti(demo_canvas_bis, "pointermove mousemove", function (event) {
     if(DEMO_MOUSE_DOWN_BIS){
         demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
         DEMO_MOUSE_DOWN_BIS_X = event.pageX-demoLeft_bis;
@@ -123,7 +123,7 @@ demo_canvas_bis.addEventListener('mouseleave', function(event) {
         redrawDemoBis();
     }
 });
-demo_canvas_bis.addEventListener('mouseup', function(event) {
+addListenerMulti(demo_canvas_bis, "pointerup mouseup", function (event) {
     if(DEMO_MOUSE_DOWN_BIS){
         DEMO_MOUSE_DOWN_BIS = false;
         demo_bis_x -= (event.pageX-demoLeft_bis)-DEMO_MOUSE_DOWN_BIS_X;
@@ -133,8 +133,7 @@ demo_canvas_bis.addEventListener('mouseup', function(event) {
 });
 
 
-
-wheel_canvas.addEventListener('mousedown', function(event) {
+addListenerMulti(wheel_canvas, "pointerdown mousedown", function (event) {
     var x = event.pageX-wheelLeft;
     var y = event.pageY-wheelTop;
     if(WHEEL_EDITING){
@@ -171,7 +170,7 @@ wheel_canvas.addEventListener('mousedown', function(event) {
     };
     
 });
-wheel_canvas.addEventListener('mousemove', function(event) {
+addListenerMulti(wheel_canvas, "pointermove mousemove", function (event) {
     if(WHEEL_EDITING_ON){
         wheel_cartesian[editing_point_index][0] += event.pageX-wheelLeft-editing_start_x;
         wheel_cartesian[editing_point_index][1] += event.pageY-wheelTop-editing_start_y;
@@ -185,7 +184,7 @@ wheel_canvas.addEventListener('mousemove', function(event) {
     };
     
 });
-wheel_canvas.addEventListener('mouseup', function(event) {
+addListenerMulti(wheel_canvas, "pointerup mouseup", function (event) {
     if(WHEEL_EDITING_ON){
         WHEEL_EDITING_ON = false;
         calculate_all();
