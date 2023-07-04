@@ -14,6 +14,7 @@ h2{
 canvas{
     border: 2px black solid;
     margin: 1px;
+    touch-action: none;
 }
 nav{
     display: flex;
