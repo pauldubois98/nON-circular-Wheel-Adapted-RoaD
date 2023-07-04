@@ -64,6 +64,12 @@ var DEMO_MOUSE_DOWN_BIS_X = 0;
 var local_collision_points_indexes = [];
 var global_collision_points_indexes = [];
 
+function addListenerMulti(element, eventNames, listener) {
+    var events = eventNames.split(" ");
+    for (var i = 0, iLen = events.length; i < iLen; i++) {
+        element.addEventListener(events[i], listener, false);
+    }
+}
 
 demo_canvas.addEventListener('mousedown', function(event) {
     DEMO_MOUSE_DOWN = true;
