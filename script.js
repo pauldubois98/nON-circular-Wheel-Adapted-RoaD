@@ -29,8 +29,10 @@ var local_collision_btn = document.getElementById("local_collision_btn");
 var local_collision_icon = document.getElementById("local_collision_icon");
 var global_collision_btn = document.getElementById("global_collision_btn");
 var global_collision_icon = document.getElementById("global_collision_icon");
+var edit_move_btn = document.getElementById("edit_move_btn");
 var WHEEL_EDITING = true;
 var WHEEL_EDITING_ON = false;
+var WHEEL_EDITING_MOVE = true;
 var editing_point_index;
 var editing_start_x;
 var editing_start_y;
@@ -167,7 +169,8 @@ addListenerMulti(wheel_canvas, "pointerdown mousedown", function (event) {
             }
             calculate_all();
         }
-    };
+    } else {
+    }
     
 });
 addListenerMulti(wheel_canvas, "pointermove mousemove", function (event) {
@@ -259,6 +262,15 @@ draw_heart_btn.addEventListener('click', function(event){
     //                 [9*Math.PI/10, 115] ];
     // calculate_cartesian();
     // calculate_all();
+});
+edit_move_btn.addEventListener('click', function(event){
+    if (WHEEL_EDITING_MOVE){
+        WHEEL_EDITING_MOVE = false;
+        edit_move_btn.innerHTML = '<img src="svg/add_24dp.svg" class="icon">Add points';
+    } else{
+        WHEEL_EDITING_MOVE = true;
+        edit_move_btn.innerHTML = '<img src="svg/move_24dp.svg" class="icon">Move points';
+    }
 });
 
 
