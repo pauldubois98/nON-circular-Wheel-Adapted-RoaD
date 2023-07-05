@@ -33,6 +33,18 @@ var edit_move_btn = document.getElementById("edit_move_btn");
 var WHEEL_EDITING = true;
 var WHEEL_EDITING_ON = false;
 var WHEEL_EDITING_MOVE = true;
+var SELECT_DISTANCE = 5;
+if (
+  navigator.userAgent.match(/Android/i) ||
+  navigator.userAgent.match(/webOS/i) ||
+  navigator.userAgent.match(/iPhone/i) ||
+  navigator.userAgent.match(/iPad/i) ||
+  navigator.userAgent.match(/iPod/i) ||
+  navigator.userAgent.match(/BlackBerry/i) ||
+  navigator.userAgent.match(/Windows Phone/i)
+) {
+  SELECT_DISTANCE = 10;
+}
 var editing_point_index;
 var editing_start_x;
 var editing_start_y;
@@ -143,10 +155,10 @@ addListenerMulti(wheel_canvas, "pointerdown mousedown", function (event) {
         for(i=0; i<wheel_cartesian.length; i++){
             var pt = wheel_cartesian[i];
             var dist = Math.sqrt( (x-pt[0])**2 + (y-pt[1])**2 );
-            if(dist<10 && editing_point_index==-1){
+            if(dist<2*SELECT_DISTANCE && editing_point_index==-1){
                 editing_point_index = -2;
             }
-            if(dist<5){
+            if(dist<SELECT_DISTANCE){
                 editing_point_index = i;
             }
         }
