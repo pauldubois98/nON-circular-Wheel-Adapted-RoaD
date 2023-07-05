@@ -150,7 +150,7 @@ addListenerMulti(wheel_canvas, "pointerdown mousedown", function (event) {
                 editing_point_index = i;
             }
         }
-        if(event.button == 0 && editing_point_index>=0){
+        if(WHEEL_EDITING_MOVE && editing_point_index>=0){
             WHEEL_EDITING_ON = true;
             editing_start_x = x;
             editing_start_y = y;
@@ -158,18 +158,12 @@ addListenerMulti(wheel_canvas, "pointerdown mousedown", function (event) {
                 wheel_cartesian[editing_point_index][0],
                 wheel_cartesian[editing_point_index][1], 5, "#FFF0", "#F00");
         }
-        if(event.button == 2){
-            if(editing_point_index>=0){
-                wheel_cartesian = wheel_cartesian.slice(0,editing_point_index).concat(wheel_cartesian.slice(editing_point_index+1));
-                calculate_polars();
-            } else if(editing_point_index==-1){
-                wheel_cartesian = wheel_cartesian.concat([[x,y]]);
-                calculate_polars();
-                calculate_cartesian();
-            }
+        if(!WHEEL_EDITING_MOVE && editing_point_index==-1){
+            wheel_cartesian = wheel_cartesian.concat([[x,y]]);
+            calculate_polars();
+            calculate_cartesian();
             calculate_all();
         }
-    } else {
     }
     
 });
