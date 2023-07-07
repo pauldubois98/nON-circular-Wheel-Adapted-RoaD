@@ -51,7 +51,7 @@ if (
   navigator.userAgent.match(/BlackBerry/i) ||
   navigator.userAgent.match(/Windows Phone/i)
 ) {
-  SELECT_DISTANCE = 10;
+  SELECT_DISTANCE = 25;
 }
 var editing_point_index;
 var editing_start_x;
