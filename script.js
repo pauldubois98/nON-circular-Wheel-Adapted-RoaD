@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     demoTop = demo_canvas.offsetTop + demo_canvas.clientTop;
     demoLeft_bis = demo_canvas_bis.offsetLeft + demo_canvas_bis.clientLeft;
     demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
+    calculate_all();
 });
 
 var new_wheel_btn = document.getElementById("new_wheel_btn");
@@ -314,5 +315,3 @@ function calculate_all(){
         }
     }
 }
-
-calculate_all();
