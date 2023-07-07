@@ -1,19 +1,27 @@
 var wheel_canvas = document.getElementById("wheel_canvas");
 var wheel_ctx = wheel_canvas.getContext('2d');
-var wheelLeft = wheel_canvas.offsetLeft + wheel_canvas.clientLeft;
-var wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
-var wheelCenter_x = wheel_canvas.width/2;
-var wheelCenter_y = wheel_canvas.height/2;
-
 var demo_canvas = document.getElementById("demo_canvas");
 var demo_ctx = demo_canvas.getContext('2d');
-var demoLeft = demo_canvas.offsetLeft + demo_canvas.clientLeft;
-var demoTop = demo_canvas.offsetTop + demo_canvas.clientTop;
-
 var demo_canvas_bis = document.getElementById("demo_canvas_bis");
 var demo_ctx_bis = demo_canvas_bis.getContext('2d');
-var demoLeft_bis = demo_canvas_bis.offsetLeft + demo_canvas_bis.clientLeft;
-var demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
+var wheelLeft;
+var wheelTop;
+var wheelCenter_x;
+var wheelCenter_y;
+var demoLeft;
+var demoTop;
+var demoLeft_bis;
+var demoTop_bis;
+document.addEventListener('DOMContentLoaded', function() {
+    wheelLeft = wheel_canvas.offsetLeft + wheel_canvas.clientLeft;
+    wheelTop = wheel_canvas.offsetTop + wheel_canvas.clientTop;
+    wheelCenter_x = wheel_canvas.width/2;
+    wheelCenter_y = wheel_canvas.height/2;
+    demoLeft = demo_canvas.offsetLeft + demo_canvas.clientLeft;
+    demoTop = demo_canvas.offsetTop + demo_canvas.clientTop;
+    demoLeft_bis = demo_canvas_bis.offsetLeft + demo_canvas_bis.clientLeft;
+    demoTop_bis = demo_canvas_bis.offsetTop + demo_canvas_bis.clientTop;
+});
 
 var new_wheel_btn = document.getElementById("new_wheel_btn");
 var finish_wheel_btn = document.getElementById("finish_wheel_btn");
